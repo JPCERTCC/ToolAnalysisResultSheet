@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>About this site</title>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <h1>About this site</h1>
+  <p>This site summarizes the results of examining logs recorded in Windows upon execution of the 49 tools which are likely to be used by the attacker that has infiltrated a network. The following logs were examined. Note that it was confirmed that traces of tool execution is most likely to be left in event logs. Accordingly, examination of event logs is the main focus here.
+  </p>
+  <ul class="list-unstyled">
+    <ul>
+      <li>Event Log</li>
+      <li>Execution history</li>
+      <li>Prefetch</li>
+      <li>USN Journal</li>
+      <li>MFT</li>
+      <li>UserAssist</li>
+      <li>Packet Capture</li>
+    </ul>
+  </ul>
+  <p>A report that outlines and usage of this research is published below. When using Tool Analysis Result Sheet, we recommend you to check the report.</p>
+  <p><a href="http://www.jpcert.or.jp/english/pub/sr/ir_research.html" target="_blank">Detecting Lateral Movement through Tracking Event Logs (Version 2)</a></p>
+  <br>
+  <h2>About Sheet Items</h2>
+  <p>The analysis results for each tool are described in a table format. The content described for each item is explained as follows.</p>
+<table class="table">
+  <thead class="thead-inverse">
+    <tr>
+      <th>Item</th>
+      <th>Content</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Tool Overview</th>
+      <td>An explanation of the tool and an example of presumed tool use during an attack are described.</td>
+    </tr>
+    <tr>
+      <th>Tool Operation Overview</th>
+      <td>Privileges for using the tool, communication protocol, and related services are described.</td>
+    </tr>
+    <tr>
+      <th>Information Acquired from Log</th>
+      <td>An overview of logs acquired at tool execution with the default settings (standard settings) as well as when an audit policy is set or Sysmon is installed is described.</td>
+    </tr>
+    <tr>
+      <th>Evidence That Can Be Confirmed when Execution is Successful</th>
+      <td>The method to confirm successful execution of the tool.</td>
+    </tr>
+    <tr>
+      <th>Main Information Recorded at Execution</th>
+      <td>Important information that can be used for the investigation of records in the targeted event logs, registry, USN Journal, MFT, and so on.</td>
+    </tr>
+    <tr>
+      <th>Details</th>
+      <td>All logs to be recorded, except ones included in "Details", are described.</td>
+    </tr>
+    <tr>
+      <th>Remarks</th>
+      <td>Any logs that may be additionally recorded and items confirmed during verification are described.</td>
+    </tr>
+  </tbody>
+</table>
+  <br>
+  <h2>Notes</h2>
+  <p>Note that a sufficient amount of event logs cannot be acquired with the default Windows settings. In this research, logs that are recorded with the following settings were examined.</p>
+  <ul class="list-unstyled">
+    <ul>
+      <li>Audit policy enabled</li>
+      <li>Sysmon installed</li>
+    </ul>
+  </ul>
+  <p>For instruction on how to enable the audit policy and install Sysmon, see the <a href="http://www.jpcert.or.jp/english/pub/sr/ir_research.html" target="_blank">report</a>.</p>
+  <br>
+  <footer class="footer">
+    <div>
+      <p class="text-center">Copyright © 2017 JPCERT/CC All Rights Reserved.</p>
+    </div>
+  </footer>
+</body>
+
+</html>

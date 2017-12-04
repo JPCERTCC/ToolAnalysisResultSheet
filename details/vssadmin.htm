@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>vssadmin</title>
+    <link rel="stylesheet" type="text/css" href="common/style.css" />
+    <script language="JavaScript" type="text/javascript" src="common/script.js"></script>
+  </head>
+  <body>
+    <h1 class="title">vssadmin</h1>
+      <h2 class="toc"><a href="#toc" class="collapse" id="a-toc" onclick="showhide('toc');">-</a> <a name="toc">Table of Contents</a></h2>
+        <div class="toc" id="div-toc">
+          <ul>
+            <li><a href="#Summary">Tool Overview</a></li>
+            <li><a href="#ExecCondition">Tool Operation Overview</a></li>
+            <li><a href="#Findings">Information Acquired from Log</a></li>
+            <li><a href="#SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></li>
+            <li><a href="#KeyEvents">Main Information Recorded at Execution</a></li>
+            <li><a href="#ADDetails">Details: Domain Controller</a></li>
+            <li><a href="#Notes">Remarks</a></li>
+          </ul>
+          <p class="toc_command"><a href="#" onclick="collapseall('s');">Open all sections</a> | <a href="#" onclick="collapseall('h');">Close all sections</a></p>
+          <hr class="section_divider" />
+        </div>
+      <h2 class="section"><a href="#Summary" class="collapse" id="a-Summary" onclick="showhide('Summary');">-</a> <a name="Summary">Tool Overview</a></h2>
+        <div class="section" id="div-Summary">
+          <dl class="table">
+            <dt class="table">Category</dt>
+              <dd class="table">Information Collection</dd>
+            <dt class="table">Description</dt>
+              <dd class="table">Creates Volume Shadow Copy and extracts NTDS.DIT, registries, and other system files.</dd>
+            <dt class="table">Example of Presumed Tool Use During an Attack</dt>
+              <dd class="table">This tool is used to extract NTDS.DIT, a database for NTDS, and another tool is used to analyze passwords.</dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#ExecCondition" class="collapse" id="a-ExecCondition" onclick="showhide('ExecCondition');">-</a> <a name="ExecCondition">Tool Operation Overview</a></h2>
+        <div class="section" id="div-ExecCondition">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">Item</th>
+                <th class="border_header">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border_header">OS</td>
+                <td class="border">Windows Server</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Belonging to Domain</td>
+                <td class="border">Required</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Rights</td>
+                <td class="border">Administrator</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Service</td>
+                <td class="border">Active Directory Domain Services, Volume Shadow Copy</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <h2 class="section"><a href="#Findings" class="collapse" id="a-Findings" onclick="showhide('Findings');">-</a> <a name="Findings">Information Acquired from Log</a></h2>
+        <div class="section" id="div-Findings">
+          <dl class="table">
+            <dt class="table">Standard Settings</dt>
+              <dd class="table"><ul>
+                <li>Domain Controller<ul>
+                  <li>Commencement of services, history of driver installation to storage devices (system event log)</li>
+                  <li>History of shadow copy creation (security event log)</li>
+                  </ul></li>
+                </ul></dd>
+            <dt class="table">Additional Settings</dt>
+              <dd class="table"><ul>
+                <li>Domain Controller<ul>
+                  <li>Execution history (audit policy, Sysmon)</li>
+                  </ul></li>
+                </ul></dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#SuccessCondition" class="collapse" id="a-SuccessCondition" onclick="showhide('SuccessCondition');">-</a> <a name="SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></h2>
+        <div class="section" id="div-SuccessCondition">
+          <ul>
+            <li>The Event ID: 8222 is recorded in the event log &quot;Security&quot;.</li>
+            <li>The fact that files under C:\Windows\NTDS that cannot normally be read were copied is recorded in the Event ID: 4663 of the event log &quot;Security&quot;.</li>
+          </ul>
+        </div>
+      <h2 class="section"><a href="#KeyEvents" class="collapse" id="a-KeyEvents" onclick="showhide('KeyEvents');">-</a> <a name="KeyEvents">Main Information Recorded at Execution</a></h2>
+        <div class="section" id="div-KeyEvents">
+          <h3 class="subsection"><a href="#KeyEvents-AD" class="collapse" id="a-KeyEvents-AD" onclick="showhide('KeyEvents-AD');">-</a> <a name="KeyEvents-AD">Domain Controller</a></h3>
+            <div class="section" id="div-KeyEvents-AD">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command (vssadmin create shadow /For=C:)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">12/13</td>
+                      <td class="border">Registry object added or deleted / Registry value set (rule: RegistryEvent)</td>
+                      <td class="border">Registry object added or deleted. / Registry value set.<ul>
+                        <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\vssvc.exe)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Services\VSS and under it)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">System</td>
+                      <td class="border">7036</td>
+                      <td class="border">Service Control Manager</td>
+                      <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                        <li><span class="strong">Status</span>: State after the transition (Running)</li>
+                        <li><span class="strong">Service Name</span>: Target service name (Volume Shadow Copy, Microsoft Software Shadow Copy Provider, Device Setup Manager)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">System</td>
+                      <td class="border">7036</td>
+                      <td class="border">Service Control Manager</td>
+                      <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                        <li><span class="strong">Status</span>: State after the transition (Stopped)</li>
+                        <li><span class="strong">Service Name</span>: Target service name (Device Setup Manager, Volume Shadow Copy, Microsoft Software Shadow Copy Provider)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">5</td>
+                      <td class="border">Security</td>
+                      <td class="border">4663</td>
+                      <td class="border">File System</td>
+                      <td class="border">An attempt was made to access an object.<ul>
+                        <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including SYNCHRONIZE, WRITE_DAC, WriteData or AddFile, AppendData, and WriteAttributes)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Object &gt; Object Name</span>: Target file name (ntds.dit and other files that cannot normally be read)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>USN journal</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">File Name</th>
+                      <th class="border_header">Process</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">[Extracted File]</td>
+                      <td class="border">BASIC_INFO_CHANGE+CLOSE+DATA_EXTEND+DATA_OVERWRITE+SECURITY_CHANGE</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>MFT</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Path</th>
+                      <th class="border_header">Header Flag</th>
+                      <th class="border_header">Validity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">[Extracted File]</td>
+                      <td class="border">FILE</td>
+                      <td class="border">ALLOCATED</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>Registry entry</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Path</th>
+                      <th class="border_header">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Under HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000</td>
+                      <td class="border">(multiple registry entries)</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Under HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\DeviceClasses\{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}\##?#STORAGE#VolumeSnapshot#HarddiskVolumeSnapshot[Number]#{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}</td>
+                      <td class="border">(multiple registry entries)</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">Under HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot</td>
+                      <td class="border">(multiple registry entries)</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Under HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS</td>
+                      <td class="border">(multiple registry entries)</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#ADDetails" class="collapse" id="a-ADDetails" onclick="showhide('ADDetails');">-</a> <a name="ADDetails">Details: Domain Controller</a></h2>
+        <div class="section" id="div-ADDetails">
+          <h3 class="subsection"><a href="#ADDetails-EventLogs" class="collapse" id="a-ADDetails-EventLogs" onclick="showhide('ADDetails-EventLogs');">-</a> <a name="ADDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-ADDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event Log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (vssadmin create shadow /For=C:)</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (High)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">2</td>
+                    <td class="border">Security</td>
+                    <td class="border">4672</td>
+                    <td class="border">Special Logon</td>
+                    <td class="border">Privileges assigned to a new logon.<ul>
+                      <li><span class="strong">Privileges</span>: Assigned privileges (SeAssignPrimaryTokenPrivilege, SeTcbPrivilege, SeSecurityPrivilege, SeTakeOwnershipPrivilege, SeLoadDriverPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeDebugPrivilege, SeAuditPrivilege, SeSystemEnvironmentPrivilege, SeImpersonatePrivilege)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (NT AUTHORITY)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool that executed the tool (SYSTEM)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">3</td>
+                    <td class="border">Security</td>
+                    <td class="border">4670</td>
+                    <td class="border">Authorization Policy Change</td>
+                    <td class="border">Permissions on an object were changed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (change successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Change permissions &gt; New security descriptor</span>: Security descriptor after the change (D:(A;;GA;;;SY)(A;;RC;;;OW)(A;;GA;;;[SID]))</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">Change permissions &gt; Original security descriptor</span>: Security descriptor before the change (D:(A;;GA;;;SY)(A;;RCGXGR;;;BA))</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Target category (Token)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="5">4</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory (C:\Windows\system32\)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (C:\Windows\system32\vssvc.exe)</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (System)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\VSSVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Running)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (Volume Shadow Copy)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Running)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (Microsoft Software Shadow Copy Provider)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Running)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (Device Setup Manager)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">5</td>
+                    <td class="border">Security</td>
+                    <td class="border">4661</td>
+                    <td class="border">SAM</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target object name (CN=Builtin,DC=[Domain Name])</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (DELETE, READ_CONTROL, WRITE_DAC, WRITE_OWNER, ReadPasswordParameters, WritePasswordParameters, ReadOtherParameters, WriteOtherParameters, CreateUser, CreateGlobalGroup, CreateLocalGroup, GetLocalGroupMembership, ListAccounts)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: SecurityAccount Manager (Security Account Manager)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Target category (SAM_DOMAIN)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4661)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4661</td>
+                    <td class="border">SAM</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target object name (CN=Builtin,DC=[Domain Name])</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (DELETE, READ_CONTROL, WRITE_DAC, WRITE_OWNER, AddMember, RemoveMember, ListMembers, ReadInformation, WriteAccount)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: SecurityAccount Manager (Security Account Manager)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Target category (SAM_DOMAIN)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4661)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">6</td>
+                    <td class="border">Security</td>
+                    <td class="border">4624</td>
+                    <td class="border">Logon</td>
+                    <td class="border">An account was successfully logged on.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">New Logon &gt; Logon ID/Logon GUID</span>: Session ID of the user who was logged on</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Logon Process</span>: Process used for logon (Advapi)</li>
+                      <li><span class="strong">New Logon &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who was logged on (SYSTEM)</li>
+                      <li><span class="strong">Logon Type</span>: Logon path, method, etc. (5=Service)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Authentication Package</span>: Authentication package used (Negotiate)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4672</td>
+                    <td class="border">Special Logon</td>
+                    <td class="border">Privileges assigned to a new logon.<ul>
+                      <li><span class="strong">Privileges</span>: Assigned privileges (SeAssignPrimaryTokenPrivilege, SeTcbPrivilege, SeSecurityPrivilege, SeTakeOwnershipPrivilege, SeLoadDriverPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeDebugPrivilege, SeAuditPrivilege, SeSystemEnvironmentPrivilege, SeImpersonatePrivilege)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (NT AUTHORITY)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool (SYSTEM)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4670</td>
+                    <td class="border">Authorization Policy Change</td>
+                    <td class="border">Permissions on an object were changed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (change successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Change permissions &gt; New security descriptor</span>: Security descriptor after the change (D:(A;;GA;;;SY)(A;;RC;;;OW)(A;;GA;;;[SID]))</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">Change permissions &gt; Original security descriptor</span>: Security descriptor before the change (D:(A;;GA;;;SY)(A;;RCGXGR;;;BA))</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Target category (Token)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">7</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">10</td>
+                    <td class="border">Process accessed (rule: ProcessAccess)</td>
+                    <td class="border">Process accessed.<ul>
+                      <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                      <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                      <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x1FFFFF, 0x1000)</li>
+                      <li><span class="strong">SourceImage</span>: Path to the access source process (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\system32\vssvc.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">10</td>
+                    <td class="border">Process accessed (rule: ProcessAccess)</td>
+                    <td class="border">Process accessed.<ul>
+                      <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                      <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                      <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x1FFFFF, 0x1000)</li>
+                      <li><span class="strong">SourceImage</span>: Path to the access source process (C:\Windows\system32\csrss.exe)</li>
+                      <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\system32\vssvc.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">10</td>
+                    <td class="border">Process accessed (rule: ProcessAccess)</td>
+                    <td class="border">Process accessed.<ul>
+                      <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                      <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                      <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x100000)</li>
+                      <li><span class="strong">SourceImage</span>: Path to access source process (C:\Windows\system32\svchost.exe)</li>
+                      <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\system32\vssvc.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="8">8</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12/13</td>
+                    <td class="border">Registry object added or deleted / Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted. / Registry value set.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\vssvc.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Services\VSS and under it)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Enum)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Enum\STORAGE)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12/13</td>
+                    <td class="border">Registry object added or deleted / Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted. / Registry value set.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number] and under it)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12/13</td>
+                    <td class="border">Registry object added or deleted / Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted. / Registry value set.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Control\DeviceContainers\{00000000-0000-0000-FFFF-FFFFFFFFFFFF} and under it)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Control\DeviceClasses\{53f5630d-b6bf-11d0-94f2-00a0c91efb8b})</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12/13</td>
+                    <td class="border">Registry object added or deleted / Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted. / Registry value set.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Control\DeviceClasses\{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}\##?#STORAGE#VolumeSnapshot#HarddiskVolumeSnapshot[Number]#{53f5630d-b6bf-11d0-94f2-00a0c91efb8b} and under it)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">9</td>
+                    <td class="border">Security</td>
+                    <td class="border">4904</td>
+                    <td class="border">Audit Policy Change</td>
+                    <td class="border">An attempt was made to register a security event source.<ul>
+                      <li><span class="strong">Event Source &gt; Source Name</span>: Registered name of the event source (VSSAudit)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Event Source &gt; Event Source ID</span>: Event Source ID (0x1273D5)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process &gt; Process ID</span>: ID of the process that attempted registration</li>
+                      <li><span class="strong">Process &gt; Process Name</span>: Name of the process that attempted registration (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who attempted registration</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">8222</td>
+                    <td class="border">VSSAudit</td>
+                    <td class="border">Shadow copy has been created.<ul>
+                      <li><span class="strong">Shadow Device Name</span>: Created name of the shadow device</li>
+                      <li><span class="strong">User SID</span>: Created SID of the user</li>
+                      <li><span class="strong">Process ID</span>: Created ID of the process</li>
+                      <li><span class="strong">User Name</span>: Created name of the user</li>
+                      <li><span class="strong">Source Computer</span>: Name of partition in the creation source host (\\?\Volume{[Volume GUID]}\)</li>
+                      <li><span class="strong">Provider ID</span>: Created host (host name)</li>
+                      <li><span class="strong">Shadow Set ID/Shadow ID</span>: Created ID of the shadow</li>
+                      <li><span class="strong">Process Image Name</span>: Created GUID of the process</li>
+                      <li><span class="strong">Source Volume</span>: Volume served as the creation source (\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy[Number of Shadow Copies])</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4905</td>
+                    <td class="border">Audit Policy Change</td>
+                    <td class="border">An attempt was made to unregister a security event source.<ul>
+                      <li><span class="strong">Event Source &gt; Source Name</span>: Name of the event source that was unregistered (VSSAudit)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Event Source &gt; Event Source ID</span>: Event Source ID (0x1273D5)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process &gt; Process ID</span>: ID of the process that attempted unregistration</li>
+                      <li><span class="strong">Process &gt; Process Name</span>: Name of the process that attempted unregistration (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who attempted unregistration</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">10</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">11</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\VSSVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">12</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory (C:\Windows\system32\)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (vssadmin list shadows)</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (High)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">13</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory (C:\Windows\system32\)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (C:\Windows\system32\vssvc.exe)</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (System)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\VSSVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">14</td>
+                    <td class="border">Security</td>
+                    <td class="border">4661</td>
+                    <td class="border">SAM</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target object name (CN=Builtin,DC=[Domain Name])</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (DELETE, READ_CONTROL, WRITE_DAC, WRITE_OWNER, ReadPasswordParameters, WritePasswordParameters, ReadOtherParameters, WriteOtherParameters, CreateUser, CreateGlobalGroup, CreateLocalGroup, GetLocalGroupMembership, ListAccounts)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: SecurityAccount Manager (Security Account Manager)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Target category (SAM_DOMAIN)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4661)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4661</td>
+                    <td class="border">SAM</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target object name (CN=Builtin,DC=[Domain Name])</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (DELETE, READ_CONTROL, WRITE_DAC, WRITE_OWNER, AddMember, RemoveMember, ListMembers, ReadInformation, WriteAccount)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: SecurityAccount Manager (Security Account Manager)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Target category (SAM_DOMAIN)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4661)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">15</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\vssvc.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\System Volume Information\RemoteVss)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (SYNCHRONIZE, WriteAttributes)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\System Volume Information\RemoteVss)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (SYNCHRONIZE, WriteAttributes)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\System Volume Information\RemoteVss)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">16</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\vssvc.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\System Volume Information\RemoteVss\{[GUID]}-{[GUID]}.PMS)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\System Volume Information\RemoteVss\{[GUID]}-{[GUID]}.PMS)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\System Volume Information\RemoteVss\{[GUID]}-{[GUID]}.PMS)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain name)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\VSSVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">17</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\vssadmin.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">18</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file ([Path]\ntds.dit)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including SYNCHRONIZE, WRITE_DAC, WriteData or AddFile, AppendData, and WriteAttributes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Any Path]\ntds.dit)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including SYNCHRONIZE, WRITE_DAC, WriteData or AddFile, AppendData, and WriteAttributes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Any Path]\ntds.dit)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">19</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file ([Path]\SYSTEM)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including SYNCHRONIZE, WRITE_DAC, WriteData or AddFile, AppendData, and WriteAttributes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Path]\SYSTEM)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including SYNCHRONIZE, WRITE_DAC, WriteData or AddFile, AppendData, and WriteAttributes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Path]\SYSTEM)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="7">20</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file ([Path]\SAM)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including SYNCHRONIZE, WRITE_DAC, WriteData or AddFile, AppendData, and WriteAttributes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Path]\SAM)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including SYNCHRONIZE, WRITE_DAC, WriteData or AddFile, AppendData, and WriteAttributes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Path]\SAM)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Stopped)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (Device Setup Manager)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Stopped)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (Volume Shadow Copy)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Stopped)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (Microsoft Software Shadow Copy Provider)</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#ADDetails-USNJournal" class="collapse" id="a-ADDetails-USNJournal" onclick="showhide('ADDetails-USNJournal');">-</a> <a name="ADDetails-USNJournal">USN Journal</a></h3>
+            <div class="section" id="div-ADDetails-USNJournal">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">File Name</th>
+                    <th class="border_header">Process</th>
+                    <th class="border_header">Attribute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="7">1</td>
+                    <td class="border">ntds.dit</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">ntds.dit</td>
+                    <td class="border">CLOSE+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">ntds.dit</td>
+                    <td class="border">SECURITY_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">ntds.dit</td>
+                    <td class="border">DATA_EXTEND+SECURITY_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">ntds.dit</td>
+                    <td class="border">DATA_EXTEND+DATA_OVERWRITE+SECURITY_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">ntds.dit</td>
+                    <td class="border">BASIC_INFO_CHANGE+DATA_EXTEND+DATA_OVERWRITE+SECURITY_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">ntds.dit</td>
+                    <td class="border">BASIC_INFO_CHANGE+CLOSE+DATA_EXTEND+DATA_OVERWRITE+SECURITY_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="5">2</td>
+                    <td class="border">SYSTEM</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SYSTEM</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SYSTEM</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SYSTEM</td>
+                    <td class="border">BASIC_INFO_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SYSTEM</td>
+                    <td class="border">CLOSE+BASIC_INFO_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="5">3</td>
+                    <td class="border">SAM</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SAM</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SAM</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SAM</td>
+                    <td class="border">BASIC_INFO_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">SAM</td>
+                    <td class="border">CLOSE+BASIC_INFO_CHANGE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#ADDetails-MFT" class="collapse" id="a-ADDetails-MFT" onclick="showhide('ADDetails-MFT');">-</a> <a name="ADDetails-MFT">MFT</a></h3>
+            <div class="section" id="div-ADDetails-MFT">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Header Flag</th>
+                    <th class="border_header">Validity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Specified Path]\ntds.dit</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">2</td>
+                    <td class="border">[Specified Path]\SYSTEM</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">3</td>
+                    <td class="border">[Specified Path]\SAM</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#ADDetails-Registry" class="collapse" id="a-ADDetails-Registry" onclick="showhide('ADDetails-Registry');">-</a> <a name="ADDetails-Registry">Registry Entry</a></h3>
+            <div class="section" id="div-ADDetails-Registry">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Type</th>
+                    <th class="border_header">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="8">1</td>
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\DriverDesc</td>
+                    <td class="border">String</td>
+                    <td class="border">Generic volume shadow copy</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\ProviderName</td>
+                    <td class="border">String</td>
+                    <td class="border">Microsoft</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\DriverDateData</td>
+                    <td class="border">String</td>
+                    <td class="border">[Binary Value of Driver Update Date and Time]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\DriverDate</td>
+                    <td class="border">String</td>
+                    <td class="border">[Driver Update Date and Time]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\DriverVersion</td>
+                    <td class="border">String</td>
+                    <td class="border">[Version Number]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\InfPath</td>
+                    <td class="border">String</td>
+                    <td class="border">volsnap.inf</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\InfSection</td>
+                    <td class="border">String</td>
+                    <td class="border">volume_snapshot_install.NTamd64</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000\MatchingDeviceId</td>
+                    <td class="border">String</td>
+                    <td class="border">STORAGE\VolumeSnapshot</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">2</td>
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\DeviceClasses\{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}\##?#STORAGE#VolumeSnapshot#HarddiskVolumeSnapshot[Number]#{53f5630d-b6bf-11d0-94f2-00a0c91efb8b}\DeviceInstance</td>
+                    <td class="border">String</td>
+                    <td class="border">STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">3</td>
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\DeviceContainers\{00000000-0000-0000-FFFF-FFFFFFFFFFFF}\BaseContainers\{00000000-0000-0000-FFFF-FFFFFFFFFFFF}\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]</td>
+                    <td class="border">Binary</td>
+                    <td class="border">(No value to be set)</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="8">4</td>
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\Capabilities</td>
+                    <td class="border">DWORD</td>
+                    <td class="border">0x000000F0</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\ConfigFlags</td>
+                    <td class="border">DWORD</td>
+                    <td class="border">0x00000000</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\ContainerID</td>
+                    <td class="border">String</td>
+                    <td class="border">{00000000-0000-0000-ffff-ffffffffffff}</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\HardwareID</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\ClassGUID</td>
+                    <td class="border">String</td>
+                    <td class="border">{533c5b84-ec70-11d2-9505-00c04f79deaf}</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\DeviceDesc</td>
+                    <td class="border">String</td>
+                    <td class="border">@volsnap.inf,%storage\volumesnapshot.devicedesc%;Generic volume shadow copy</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\Driver</td>
+                    <td class="border">String</td>
+                    <td class="border">{533c5b84-ec70-11d2-9505-00c04f79deaf}\0000</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum\STORAGE\VolumeSnapshot\HarddiskVolumeSnapshot[Number]\Mfg</td>
+                    <td class="border">String</td>
+                    <td class="border">@volsnap.inf,%msft%;Microsoft</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="47">5</td>
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\ASR Writer</td>
+                    <td class="border">Key</td>
+                    <td class="border">(No value to be set)</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\COM+ REGDB Writer</td>
+                    <td class="border">Key</td>
+                    <td class="border">(No value to be set)</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\FSProvider_{89300202-3cec-4981-9171-19f59559e0f2}</td>
+                    <td class="border">Key</td>
+                    <td class="border">(No value to be set)</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace\OPEN_VOLUME_HANDLE (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace\OPEN_VOLUME_HANDLE (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace\IOCTL_FLUSH_AND_HOLD (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace\IOCTL_FLUSH_AND_HOLD (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace\IOCTL_RELEASE (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace\IOCTL_RELEASE (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace(C:_)\OPEN_VOLUME_HANDLE (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace(C:_)\OPEN_VOLUME_HANDLE (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace(C:_)\IOCTL_FLUSH_AND_HOLD (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace(C:_)\IOCTL_FLUSH_AND_HOLD (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace(C:_)\IOCTL_RELEASE (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Lovelace(C:_)\IOCTL_RELEASE (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Registry Writer</td>
+                    <td class="border">Key</td>
+                    <td class="border">(No value to be set)</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\Shadow Copy Optimization Writer</td>
+                    <td class="border">Key</td>
+                    <td class="border">(No value to be set)</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_BEGINPREPARE (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_BEGINPREPARE (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_ENDPREPARE (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_ENDPREPARE (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_PRECOMMIT (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_PRECOMMIT (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_COMMIT (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_COMMIT (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_POSTCOMMIT (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_POSTCOMMIT (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_PREFINALCOMMIT (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_PREFINALCOMMIT (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_POSTFINALCOMMIT (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\SwProvider_{b5946137-7b9f-4925-af80-51abd60b20d5}\PROVIDER_POSTFINALCOMMIT (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}DeleteProcess (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}DeleteProcess (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}PrepareForSnapshot (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}PreExposure (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}PreExposure (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}PrepareForSnapshot (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}EndCommit (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}EndCommit (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}SetIgnorable (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}SetIgnorable (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}AdjustBitmap (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}ComputeIgnorableProduct (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}ComputeIgnorableProduct (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VolSnap\Volume{80d75175-a173-11e6-80b0-806e6f6e6963}AdjustBitmap (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VssvcPublisher\FREEZE (Enter)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\VSS\Diag\VssvcPublisher\FREEZE (Leave)</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#Notes" class="collapse" id="a-Notes" onclick="showhide('Notes');">-</a> <a name="Notes">Remarks</a></h2>
+        <div class="section" id="div-Notes">
+          <ul>
+            <li>In this test, when copying the ntds.dit file and others, &quot;\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy[Number]\windows\ntds\ntds.dit&quot; and &quot;\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy[Number]\windows\system32\config\SYSTEM・SAM&quot; are directly operated. When referencing from Explorer, it is necessary to use &quot;dosdev.exe&quot; and other tools separately to assign drive letters.</li>
+            <li>This test is described on the assumption that extracted files remain on a host. If they are to be deleted, it will not be recorded in MFT and DELETE will be recorded in the event log and USN journal.</li>
+          </ul>
+        </div>
+  </body>
+</html>

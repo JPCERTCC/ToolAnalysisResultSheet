@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>nltest /dsgetdc: /force</title>
+    <link rel="stylesheet" type="text/css" href="common/style.css" />
+    <script language="JavaScript" type="text/javascript" src="common/script.js"></script>
+  </head>
+  <body>
+    <h1 class="title">nltest /dsgetdc: /force</h1>
+      <h2 class="toc"><a href="#toc" class="collapse" id="a-toc" onclick="showhide('toc');">-</a> <a name="toc">Table of Contents</a></h2>
+        <div class="toc" id="div-toc">
+          <ul>
+            <li><a href="#Summary">Tool Overview</a></li>
+            <li><a href="#ExecCondition">Tool Operation Overview</a></li>
+            <li><a href="#Findings">Information Acquired from Log</a></li>
+            <li><a href="#SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></li>
+            <li><a href="#KeyEvents">Main Information Recorded at Execution</a></li>
+            <li><a href="#SourceDetails">Details: Source Host</a></li>
+            <li><a href="#ADDetails">Details: Domain Controller</a></li>
+          </ul>
+          <p class="toc_command"><a href="#" onclick="collapseall('s');">Open all sections</a> | <a href="#" onclick="collapseall('h');">Close all sections</a></p>
+          <hr class="section_divider" />
+        </div>
+      <h2 class="section"><a href="#Summary" class="collapse" id="a-Summary" onclick="showhide('Summary');">-</a> <a name="Summary">Tool Overview</a></h2>
+        <div class="section" id="div-Summary">
+          <dl class="table">
+            <dt class="table">Category</dt>
+              <dd class="table">Information Collection</dd>
+            <dt class="table">Description</dt>
+              <dd class="table">Acquires the Domain Controller used and its IP address.</dd>
+            <dt class="table">Example of Presumed Tool Use During an Attack</dt>
+              <dd class="table">This tool is used to acquire information on the Domain Controller to which a host belongs.</dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#ExecCondition" class="collapse" id="a-ExecCondition" onclick="showhide('ExecCondition');">-</a> <a name="ExecCondition">Tool Operation Overview</a></h2>
+        <div class="section" id="div-ExecCondition">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">Item</th>
+                <th class="border_header">Source host</th>
+                <th class="border_header">Domain Controller</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border_header">OS</td>
+                <td class="border">Windows</td>
+                <td class="border">Windows Server</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Communication Protocol</td>
+                <td class="border" colspan="2">389/udp</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Belonging to Domain</td>
+                <td class="border" colspan="2">Not required</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Rights</td>
+                <td class="border" colspan="2">Standard user</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Service</td>
+                <td class="border">Workstation</td>
+                <td class="border">Active Directory Domain Services</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <h2 class="section"><a href="#Findings" class="collapse" id="a-Findings" onclick="showhide('Findings');">-</a> <a name="Findings">Information Acquired from Log</a></h2>
+        <div class="section" id="div-Findings">
+          <dl class="table">
+            <dt class="table">Standard Settings</dt>
+              <dd class="table"><ul>
+                <li>Source host<ul>
+                  <li>Execution history (Prefetch)</li>
+                  </ul></li>
+                </ul></dd>
+            <dt class="table">Additional Settings</dt>
+              <dd class="table"><ul>
+                <li>Source host<ul>
+                  <li>Execution history (Sysmon, audit policy)</li>
+                  </ul></li>
+                </ul></dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#SuccessCondition" class="collapse" id="a-SuccessCondition" onclick="showhide('SuccessCondition');">-</a> <a name="SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></h2>
+        <div class="section" id="div-SuccessCondition">
+          <ul>
+            <li>Source Host: The Event ID 4689 (A process has exited) indicating that nltest.exe was executed and has exited, was recorded in the event log &quot;Security&quot; with the execution result (return value) of &quot;0x0&quot;.</li>
+          </ul>
+        </div>
+      <h2 class="section"><a href="#KeyEvents" class="collapse" id="a-KeyEvents" onclick="showhide('KeyEvents');">-</a> <a name="KeyEvents">Main Information Recorded at Execution</a></h2>
+        <div class="section" id="div-KeyEvents">
+          <h3 class="subsection"><a href="#KeyEvents-Source" class="collapse" id="a-KeyEvents-Source" onclick="showhide('KeyEvents-Source');">-</a> <a name="KeyEvents-Source">Source Host</a></h3>
+            <div class="section" id="div-KeyEvents-Source">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command (nltest /dsgetdc: /force)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\nltest.exe)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Security</td>
+                      <td class="border">4689</td>
+                      <td class="border">Process Termination</td>
+                      <td class="border">A process has exited.<ul>
+                        <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                        <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                        <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool</li>
+                        <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                        <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\nltest.exe)</li>
+                        <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool</li>
+                        <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#SourceDetails" class="collapse" id="a-SourceDetails" onclick="showhide('SourceDetails');">-</a> <a name="SourceDetails">Details: Source Host</a></h2>
+        <div class="section" id="div-SourceDetails">
+          <h3 class="subsection"><a href="#SourceDetails-EventLogs" class="collapse" id="a-SourceDetails-EventLogs" onclick="showhide('SourceDetails-EventLogs');">-</a> <a name="SourceDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-SourceDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event Log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (nltest /dsgetdc: /force)</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (Medium)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\nltest.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation (Mandatory Label\Medium Mandatory Level)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to parent process that created the new process</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\nltest.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">2</td>
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (17=UDP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (389)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (Domain Controller)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (17=UDP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">3</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\nltest.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\nltest.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">4</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\Windows\Prefetch\NLTEST.exe-[RANDOM].pf)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\NLTEST.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\NLTEST.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Account Name</span>: Name of the account that executed the tool ([Host Name]$)</li>
+                      <li><span class="strong">Subject &gt; Account Domain</span>: Domain to which the account belongs (domain)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID</span>: SID of the user who executed the tool (SYSTEM)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-USNJournal" class="collapse" id="a-SourceDetails-USNJournal" onclick="showhide('SourceDetails-USNJournal');">-</a> <a name="SourceDetails-USNJournal">USN Journal</a></h3>
+            <div class="section" id="div-SourceDetails-USNJournal">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">File Name</th>
+                    <th class="border_header">Process</th>
+                    <th class="border_header">Attribute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="3">1</td>
+                    <td class="border">NLTEST.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">NLTEST.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">NLTEST.EXE-[RANDOM].pf</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-MFT" class="collapse" id="a-SourceDetails-MFT" onclick="showhide('SourceDetails-MFT');">-</a> <a name="SourceDetails-MFT">MFT</a></h3>
+            <div class="section" id="div-SourceDetails-MFT">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Header Flag</th>
+                    <th class="border_header">Validity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Drive Name]:\Windows\Prefetch\NLTEST.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-Prefetch" class="collapse" id="a-SourceDetails-Prefetch" onclick="showhide('SourceDetails-Prefetch');">-</a> <a name="SourceDetails-Prefetch">Prefetch</a></h3>
+            <div class="section" id="div-SourceDetails-Prefetch">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Prefetch File</th>
+                    <th class="border_header">Process Name</th>
+                    <th class="border_header">Process Path</th>
+                    <th class="border_header">Information That Can Be Confirmed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">NLTEST.EXE-[RANDOM].pf</td>
+                    <td class="border">NLTEST.EXE</td>
+                    <td class="border">\VOLUME{[GUID]}\WINDOWS\SYSTEM32\NLTEST.EXE</td>
+                    <td class="border">Last Run Time (last execution date and time)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+      <h2 class="section"><a href="#ADDetails" class="collapse" id="a-ADDetails" onclick="showhide('ADDetails');">-</a> <a name="ADDetails">Details: Domain Controller</a></h2>
+        <div class="section" id="div-ADDetails">
+          <h3 class="subsection"><a href="#ADDetails-EventLogs" class="collapse" id="a-ADDetails-EventLogs" onclick="showhide('ADDetails-EventLogs');">-</a> <a name="ADDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-ADDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (udp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (source host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (source host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (389)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (Domain Controller host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (Domain Controller IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (389)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (source host)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (17=UDP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (Domain Controller)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+  </body>
+</html>

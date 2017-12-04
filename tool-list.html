@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Tool List</title>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <h1>Tool List</h1>
+  <table class="table">
+    <thead class="thead-inverse">
+      <tr>
+        <th>Category</th>
+        <th>Tool</th>
+        <th>Detals</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th rowspan="8">Command Execution</th>
+        <td><a class="nav-link" href="details/PsExec.htm" target="mainframe">PsExec</a></td>
+        <td>Executes a command on a remote host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/wmic.htm" target="mainframe">wmic</a></td>
+        <td>Used for Windows system management.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/schtasks.htm" target="mainframe">schtasks</a></td>
+        <td>Executes a task at the specified time.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/wmiexec-vbs.htm" target="mainframe">wmiexec.vbs</a></td>
+        <td>Used for Windows system management.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/BeginX.htm" target="mainframe">BeginX</a></td>
+        <td>Executes a command from a client to the server.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/WinRM.htm" target="mainframe">WinRM</a></td>
+        <td>Steals information from a remote host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/WinRS.htm" target="mainframe">WinRS</a></td>
+        <td>Executes a command on a remote host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/BITS.htm" target="mainframe">BITS</a></td>
+        <td>Sends and receives files in background.</td>
+      </tr>
+      <tr>
+        <th rowspan="16">Password and Hash Dump</th>
+        <td><a class="nav-link" href="details/PwDump7.htm" target="mainframe">PWDump7</a></td>
+        <td>Displays a list of password hashes in the host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/PWDumpX.htm" target="mainframe">PWDumpX</a></td>
+        <td>Acquires a password hash from a remote host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/QuarksPWDump.htm" target="mainframe">Quarks PwDump</a></td>
+        <td>Acquires the password hashes of domain and local accounts as well as cached passwords.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/Mimikatz_lsadump-sam.htm" target="mainframe">Mimikatz<br>(Password and Hash Dump lsadump::sam)</a></td>
+        <td>Steals authentication information stored in the OS.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/Mimikatz_sekurlsa-logonpasswords.htm" target="mainframe">Mimikatz<br>(Password and Hash Dump sekurlsa::logonpasswords)</a></td>
+        <td>Steals authentication information stored in the OS.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/Mimikatz_sekurlsa-tickets.htm" target="mainframe">Mimikatz<br>(Ticket Acquisition sekurlsa::tickets)</a></td>
+        <td>Acquires tickets for logged-on sessions.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/WCE.htm" target="mainframe">WCE</a></td>
+        <td>Acquires a password hash in the memory of a host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/gsecdump.htm" target="mainframe">gsecdump</a></td>
+        <td>SAM/Extracts a password hash from SAM/AD or logon sessions.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/lslsass.htm" target="mainframe">lslsass</a></td>
+        <td>Acquires a password hash of active logon sessions from the Isass process.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/AceHash.htm" target="mainframe">AceHash</a></td>
+        <td>Acquires the password hash value and logs on to the host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/Find-GPOPasswords.htm" target="mainframe">Find-GPOPasswords.ps1</a></td>
+        <td>Acquires passwords written in a group policy file.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/PowerSploit_GetGPPPassword.htm" target="mainframe">Get-GPPPassword<br>(PowerSploit)</a></td>
+        <td>Acquires plaintext passwords and other account information written in the group policy.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/PowerSploit_Invoke-Mimikatz.htm" target="mainframe">Invoke-Mimikatz<br>(PowerSploit)</a></td>
+        <td>Loads Mimikatz into memory and starts it up.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/PowerSploit_Out-Minidump.htm" target="mainframe">Out-Minidump<br>(PowerSploit)</a></td>
+        <td>Dumps a process into memory.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/PowerMemory.htm" target="mainframe">PowerMemory<br>(RWMC Tool)</a></td>
+        <td>Acquires authentication information existing in files and memory.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/WebBrowserPassView.htm" target="mainframe">WebBrowserPassView</a></td>
+        <td>Extracts user names and passwords saved in the web browser.</td>
+      </tr>
+      <tr>
+        <th rowspan="2">Malicious Communication Relay</th>
+        <td><a class="nav-link" href="details/Htran.htm" target="mainframe">Htran</a></td>
+        <td>Bypasses communications.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/FakeWpad.htm" target="mainframe">Fake wpad</a></td>
+        <td>Acquires and changes communication contents from the client by operating as the wpad server.</td>
+      </tr>
+      <tr>
+        <th>Remote Login</th>
+        <td><a class="nav-link" href="details/mstsc.htm" target="mainframe">RDP</a></td>
+        <td>Connects to a server on which Remote Desktop Service (RDS) is running.</td>
+      </tr>
+      <tr>
+        <th rowspan="2">Pass-the-hash<br>Pass-the-ticket</th>
+        <td><a class="nav-link" href="details/RemoteLogin-WCE.htm" target="mainframe">WCE (Remote Login)</a></td>
+        <td>Executes a command from a remote host using the acquired password hash.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/RemoteLogin-Mimikatz.htm" target="mainframe">Mimikatz (Remote Login)</a></td>
+        <td>Executes a command from a remote host using the acquired password hash.</td>
+      </tr>
+      <tr>
+        <th rowspan="3">Escalation to SYSTEM Privilege</th>
+        <td><a class="nav-link" href="details/MS14-058.htm" target="mainframe">MS14-058 Exploit</a></td>
+        <td>Executes a specified executable file with SYSTEM privileges.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/MS15-078.htm" target="mainframe">MS15-078 Exploit</a></td>
+        <td>Executes a specified executable file with SYSTEM privileges.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/SDB-UAC-Bypass.htm" target="mainframe">SDB UAC Bypass</a></td>
+        <td>Uses Application Compatibility Database (SDB) to execute applications that are controlled by User Account Control (UAC) as a user with administrator privileges.</td>
+      </tr>
+      <tr>
+        <th rowspan="3">Capturing Domain Administrator Rights Account</th>
+        <td><a class="nav-link" href="details/MS14-068.htm" target="mainframe">MS14-068 Exploit</a></td>
+        <td>Changes the privileges of the domain user to domain administrator privileges.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/Mimikatz_GoldenTicket.htm" target="mainframe">Golden Ticket<br>(Mimikatz)</a></td>
+        <td>Forges Kerberos authentication tickets and connects to a remote host.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/Mimikatz_SilverTicket.htm" target="mainframe">Silver Ticket<br>(Mimikatz)</a></td>
+        <td>Forges Kerberos authentication tickets and connects to a remote host.</td>
+      </tr>
+      <tr>
+        <th rowspan="8">Information Collection</th>
+        <td><a class="nav-link" href="details/ntdsutil.htm" target="mainframe">ntdsutil</a></td>
+        <td>Used to maintain Active Directory databases.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/vssadmin.htm" target="mainframe">vssadmin</a></td>
+        <td>Creates Volume Shadow Copy and extracts NTDS.DIT, registries, and other system files.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/csvde.htm" target="mainframe">csvde</a></td>
+        <td>Outputs account information on the Active Directory in CSV format.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/ldifde.htm" target="mainframe">ldifde</a></td>
+        <td>Outputs account information on the Active Directory in LDIF format.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/dsquery.htm" target="mainframe">dsquery</a></td>
+        <td>Acquires information, such as users and groups, from the Active Directory.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/dcdiag.htm" target="mainframe">dcdiag</a></td>
+        <td>Analyzes and examines the status of the Domain Controller.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/nltest.htm" target="mainframe">nltest</a></td>
+        <td>Acquires the Domain Controller used and its IP address.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/nmap.htm" target="mainframe">nmap</a></td>
+        <td>Used for network investigation.</td>
+      </tr>
+      <tr>
+        <th>Adding or Deleting Local User and Group</th>
+        <td><a class="nav-link" href="details/net-user.htm" target="mainframe">net user</a></td>
+        <td>Adds a user account in a host or domain.</td>
+      </tr>
+      <tr>
+        <th>File Sharing</th>
+        <td><a class="nav-link" href="details/net-use.htm" target="mainframe">net use</a></td>
+        <td>Connects to shared folders that are publicly available on the network.</td>
+      </tr>
+      <tr>
+        <th rowspan="4">Deleting Evidence</th>
+        <td><a class="nav-link" href="details/sdelete.htm" target="mainframe">sdelete</a></td>
+        <td>Deletes a file after overwriting it several times.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/timestomp.htm" target="mainframe">timestomp</a></td>
+        <td>Changes the file timestamp.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/klist-purge.htm" target="mainframe">klist purge</a></td>
+        <td>Deletes saved Kerberos tickets.</td>
+      </tr>
+      <tr>
+        <td><a class="nav-link" href="details/wevtutil.htm" target="mainframe">wevtutil</a></td>
+        <td>Deletes Windows event logs.</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>

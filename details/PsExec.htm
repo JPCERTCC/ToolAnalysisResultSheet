@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>PsExec</title>
+    <link rel="stylesheet" type="text/css" href="common/style.css" />
+    <script language="JavaScript" type="text/javascript" src="common/script.js"></script>
+  </head>
+  <body>
+    <h1 class="title">PsExec</h1>
+      <h2 class="toc"><a href="#toc" class="collapse" id="a-toc" onclick="showhide('toc');">-</a> <a name="toc">Table of Contents</a></h2>
+        <div class="toc" id="div-toc">
+          <ul>
+            <li><a href="#Summary">Tool Overview</a></li>
+            <li><a href="#ExecCondition">Tool Operation Overview</a></li>
+            <li><a href="#Findings">Information Acquired from Log</a></li>
+            <li><a href="#SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></li>
+            <li><a href="#KeyEvents">Main Information Recorded at Execution</a></li>
+            <li><a href="#SourceDetails">Details: Source Host</a></li>
+            <li><a href="#DestinationDetails">Details: Destination Host</a></li>
+            <li><a href="#Packets">Packet Capture</a></li>
+            <li><a href="#Notes">Remarks</a></li>
+          </ul>
+          <p class="toc_command"><a href="#" onclick="collapseall('s');">Open all sections</a> | <a href="#" onclick="collapseall('h');">Close all sections</a></p>
+          <hr class="section_divider" />
+        </div>
+      <h2 class="section"><a href="#Summary" class="collapse" id="a-Summary" onclick="showhide('Summary');">-</a> <a name="Summary">Tool Overview</a></h2>
+        <div class="section" id="div-Summary">
+          <dl class="table">
+            <dt class="table">Category</dt>
+              <dd class="table">Command Execution</dd>
+            <dt class="table">Description</dt>
+              <dd class="table">Executes a command on a remote host.</dd>
+            <dt class="table">Example of Presumed Tool Use During an Attack</dt>
+              <dd class="table">The tool is used to execute a remote command on hosts and servers in a domain.</dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#ExecCondition" class="collapse" id="a-ExecCondition" onclick="showhide('ExecCondition');">-</a> <a name="ExecCondition">Tool Operation Overview</a></h2>
+        <div class="section" id="div-ExecCondition">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">Item</th>
+                <th class="border_header">Source host</th>
+                <th class="border_header">Destination Host</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border_header">OS</td>
+                <td class="border" colspan="2">Windows</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Belonging to Domain</td>
+                <td class="border" colspan="2">Not required</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Rights</td>
+                <td class="border">Standard user</td>
+                <td class="border">Administrator</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Communication Protocol</td>
+                <td class="border" colspan="2"><ul>
+                  <li>88/tcp (when executing in a domain environment)</li>
+                  <li>135/tcp</li>
+                  <li>445/tcp</li>
+                  <li>Random High Port</li>
+                  </ul></td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Service</td>
+                <td class="border" colspan="2">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <h2 class="section"><a href="#Findings" class="collapse" id="a-Findings" onclick="showhide('Findings');">-</a> <a name="Findings">Information Acquired from Log</a></h2>
+        <div class="section" id="div-Findings">
+          <dl class="table">
+            <dt class="table">Standard Settings</dt>
+              <dd class="table"><ul>
+                <li>Source host<ul>
+                  <li>A registry value created when the PsExec License Agreement has been agreed to (registry).</li>
+                  <li>Execution history (Prefetch)</li>
+                  </ul></li>
+                <li>Destination Host<ul>
+                  <li>The fact that the PSEXESVC service has been installed, started, and ended is recorded (system log).</li>
+                  <li>Execution history (Prefetch)</li>
+                  </ul></li>
+                </ul></dd>
+            <dt class="table">Additional Settings</dt>
+              <dd class="table"><ul>
+                <li>Source host<ul>
+                  <li>The fact that the PsExec process was executed and that connection was made to the destination via the network, as well as the command name and argument for a remotely executed command are recorded (audit policy, Sysmon).</li>
+                  <li>A registry value created when the PsExec License Agreement has been agreed to (Sysmon).</li>
+                  </ul></li>
+                <li>Destination Host<ul>
+                  <li>The fact that PSEXESVC.exe was created and accessed, and that connection was made from the source via the network, as well as the command name and argument for a remotely executed command are recorded (audit policy, Sysmon).</li>
+                  </ul></li>
+                <li>Packet Capture<ul>
+                  <li>Transmission of PSEXESVC and its output file (-stdin, -stdout, -stderr) with SMB2.</li>
+                  </ul></li>
+                </ul></dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#SuccessCondition" class="collapse" id="a-SuccessCondition" onclick="showhide('SuccessCondition');">-</a> <a name="SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></h2>
+        <div class="section" id="div-SuccessCondition">
+          <ul>
+            <li>Source Host: The Event ID 4689 (A process has exited) indicating that psexec.exe was executed and has exited, was recorded in the event log &quot;Security&quot; with the execution result (return value) of &quot;0x0&quot;.</li>
+            <li>Destination host: In the Event ID: 7045 of the event log &quot;System&quot;, the fact that the PSEXESVC service was installed is recorded.</li>
+          </ul>
+        </div>
+      <h2 class="section"><a href="#KeyEvents" class="collapse" id="a-KeyEvents" onclick="showhide('KeyEvents');">-</a> <a name="KeyEvents">Main Information Recorded at Execution</a></h2>
+        <div class="section" id="div-KeyEvents">
+          <h3 class="subsection"><a href="#KeyEvents-Source" class="collapse" id="a-KeyEvents-Source" onclick="showhide('KeyEvents-Source');">-</a> <a name="KeyEvents-Source">Source Host</a></h3>
+            <div class="section" id="div-KeyEvents-Source">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command ([Path to Executable File] [Execution Command])</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (path to the executable file)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">3</td>
+                      <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                      <td class="border">Network connection detected.<ul>
+                        <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                        <li><span class="strong">User</span>: Execute as user (NT_AUTHORITY\SYSTEM)</li>
+                        <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (source host)</li>
+                        <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (destination ports: 135 and 445, high port)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">13</td>
+                      <td class="border">Registry value set (rule: RegistryEvent)</td>
+                      <td class="border">Registry value set.<ul>
+                        <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000001)</li>
+                        <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\USER\[User SID]\SOFTWARE\Sysinternals\PsExec\EulaAccepted)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Security</td>
+                      <td class="border">4689</td>
+                      <td class="border">Process Termination</td>
+                      <td class="border">A process has exited.<ul>
+                        <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                        <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (path to the tool)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>Prefetch</h4>
+                <ul>
+                  <li>C:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf</li>
+                </ul>
+              <h4>Registry entry</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Path</th>
+                      <th class="border_header">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">HKEY_USERS\[User SID]\SOFTWARE\Sysinternals\PsExec\EulaAccepted</td>
+                      <td class="border">0x00000001</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+          <h3 class="subsection"><a href="#KeyEvents-Destination" class="collapse" id="a-KeyEvents-Destination" onclick="showhide('KeyEvents-Destination');">-</a> <a name="KeyEvents-Destination">Destination Host</a></h3>
+            <div class="section" id="div-KeyEvents-Destination">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Security</td>
+                      <td class="border">5145</td>
+                      <td class="border">Detailed File Share</td>
+                      <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                        <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\ADMIN$)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Shared Information &gt; Share Path</span>: Share path (\\??\C:\Windows)</li>
+                        <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC.exe)</li>
+                        <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\system32\services.exe)</li>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command</li>
+                        <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\system32\services.exe)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\PSEXESVC.exe)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">System</td>
+                      <td class="border">7045</td>
+                      <td class="border">A service was installed in the system.</td>
+                      <td class="border">A service was installed.<ul>
+                        <li><span class="strong">Service start type</span>: Operation of trigger that starts the service (demand start)</li>
+                        <li><span class="strong">Service account</span>: Executing account (LocalSystem)</li>
+                        <li><span class="strong">Service type</span>: Type of the service to be executed (user mode service)</li>
+                        <li><span class="strong">Service Name</span>: Name displayed in the service list (PSEXESVC)</li>
+                        <li><span class="strong">Service File Name</span>: Service executable file (%SystemRoot%\PSEXESVC.exe)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Security</td>
+                      <td class="border">5145</td>
+                      <td class="border">Detailed File Share</td>
+                      <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                        <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\IPC$)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC-[Source Host Name]-[Source Process ID]-[stdin, stdout, stderr])</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">5</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                        <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\PSEXESVC.exe)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (Path to the executable file that was executed by PsExec)</li>
+                        <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\PSEXESVC.exe)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">6</td>
+                      <td class="border">System</td>
+                      <td class="border">7036</td>
+                      <td class="border">Service Control Manager</td>
+                      <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                        <li><span class="strong">Status</span>: State after the transition (Stopped)</li>
+                        <li><span class="strong">Service Name</span>: Target service name (PSEXESVC)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">7</td>
+                      <td class="border">Security</td>
+                      <td class="border">4689</td>
+                      <td class="border">Process Termination</td>
+                      <td class="border">A process has exited.<ul>
+                        <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                        <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\PSEXESVC.exe)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">8</td>
+                      <td class="border">Security</td>
+                      <td class="border">4674</td>
+                      <td class="border">Sensitive Privilege Use</td>
+                      <td class="border">An operation was attempted on a privileged object.<ul>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Object &gt; Object Name</span>: Name of the object to be processed (PSEXESVC)</li>
+                        <li><span class="strong">Object &gt; Object Server</span>: Service that executed the process (SC Manager)</li>
+                        <li><span class="strong">Requested operation &gt; Privileges</span>: Requested privilege (DELETE)</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\services.exe)</li>
+                        <li><span class="strong">Object &gt; Object Type</span>: Type of the object to be processed (SERVICE OBJECT)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">9</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">11</td>
+                      <td class="border">File created (rule: FileCreate)</td>
+                      <td class="border">File created.<ul>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">TargetFilename</span>: Created file (C:\Windows\Prefetch\PSEXECSVC.EXE-[Random Number].pf)</li>
+                        <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>USN journal</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">File Name</th>
+                      <th class="border_header">Process</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">PSEXESVC.exe</td>
+                      <td class="border">FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">PSEXESVC.exe</td>
+                      <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">PSEXESVC.exe</td>
+                      <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">PSEXESVC.EXE-[RANDOM].pf</td>
+                      <td class="border">FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">5</td>
+                      <td class="border">PSEXESVC.EXE-[RANDOM].pf</td>
+                      <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">6</td>
+                      <td class="border">PSEXESVC.EXE-[RANDOM].pf</td>
+                      <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">7</td>
+                      <td class="border">PSEXESVC.exe</td>
+                      <td class="border">CLOSE+FILE_DELETE</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>Prefetch</h4>
+                <ul>
+                  <li>C:\Windows\Prefetch\PSEXESVC.EXE-[RANDOM].pf</li>
+                </ul>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#SourceDetails" class="collapse" id="a-SourceDetails" onclick="showhide('SourceDetails');">-</a> <a name="SourceDetails">Details: Source Host</a></h2>
+        <div class="section" id="div-SourceDetails">
+          <h3 class="subsection"><a href="#SourceDetails-EventLogs" class="collapse" id="a-SourceDetails-EventLogs" onclick="showhide('SourceDetails-EventLogs');">-</a> <a name="SourceDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-SourceDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command ([Path to Executable File] [Execution Command])</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the executable file)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation (Mandatory Label\High Mandatory Level)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to the parent process that created the new process. A record is confirmed on Windows 10 only.</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (path to the executable file)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (2)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">2</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value. Although it was &quot;\REGISTRY\A\[UUID]\Root\File\[UUID]\40000174b3&quot; when the test was conducted, it may change.</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry. In Windows 7, the data type (&quot;Binary Data&quot;, etc.) is displayed. In Windows 10, the value (path to the tool) may be displayed</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination. Although it was &quot;registry key\15 that was created immediately before it was written&quot; when the test was conducted, it may change.</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">3</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\USER\[User SID]\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\[UUID]\Count\CfRkrp.rkr)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">4</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value  (\REGISTRY\USER\[User SID]\SOFTWARE\Sysinternals\PsExec)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000001)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\USER\[User SID]\SOFTWARE\Sysinternals\PsExec\EulaAccepted)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">5</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">10</td>
+                    <td class="border">Process accessed (rule: ProcessAccess)</td>
+                    <td class="border">Process accessed.<ul>
+                      <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                      <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                      <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x1000, 0x1478)</li>
+                      <li><span class="strong">SourceImage</span>: Path to the access source process (C:\Windows\system32\lsass.exe)</li>
+                      <li><span class="strong">TargetImage</span>: Path to the access destination process (path to the tool)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">6</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\Services\Tcpip\Parameters)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">7</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\Users\[User Name]\AppData\Roaming\Microsoft\Crypto\RSA\[User SID], and under that)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">8</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">User</span>: Execute as user (NT_AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (high port)</li>
+                      <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (445)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address/Destination Port</span>: Destination IP address/Port number (445)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (System)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID (4)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">9</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (high port)</li>
+                      <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (135)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address/Destination Port</span>: Destination IP address/Port number (135)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (path to the tool)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">10</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (high port)</li>
+                      <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (high port)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address/Destination Port</span>: Destination IP address/Port number (high port)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (path to the tool)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">11</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">12</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\Windows\Prefetch\[Tool Executable File Name]-[Random Number].pf)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656/4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">A handle to an object was requested. / An attempt was made to access an object.<ul>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\[Tool Executable File Name]-[Random Number].pf)</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-USNJournal" class="collapse" id="a-SourceDetails-USNJournal" onclick="showhide('SourceDetails-USNJournal');">-</a> <a name="SourceDetails-USNJournal">USN Journal</a></h3>
+            <div class="section" id="div-SourceDetails-USNJournal">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">File Name</th>
+                    <th class="border_header">Process</th>
+                    <th class="border_header">Attribute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-MFT" class="collapse" id="a-SourceDetails-MFT" onclick="showhide('SourceDetails-MFT');">-</a> <a name="SourceDetails-MFT">MFT</a></h3>
+            <div class="section" id="div-SourceDetails-MFT">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Header Flag</th>
+                    <th class="border_header">Validity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Drive Name]:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-Prefetch" class="collapse" id="a-SourceDetails-Prefetch" onclick="showhide('SourceDetails-Prefetch');">-</a> <a name="SourceDetails-Prefetch">Prefetch</a></h3>
+            <div class="section" id="div-SourceDetails-Prefetch">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Prefetch File</th>
+                    <th class="border_header">Process Name</th>
+                    <th class="border_header">Process Path</th>
+                    <th class="border_header">Information That Can Be Confirmed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">[Executable File Name of Tool]</td>
+                    <td class="border">\VOLUME{[GUID]}\[Path to the Tool]</td>
+                    <td class="border">Last Run Time (last execution date and time)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-Registry" class="collapse" id="a-SourceDetails-Registry" onclick="showhide('SourceDetails-Registry');">-</a> <a name="SourceDetails-Registry">Registry Entry</a></h3>
+            <div class="section" id="div-SourceDetails-Registry">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Type</th>
+                    <th class="border_header">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">HKEY_USERS\[User SID]\SOFTWARE\Sysinternals\PsExec\EulaAccepted</td>
+                    <td class="border">DWORD</td>
+                    <td class="border">0x00000001</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">2</td>
+                    <td class="border">HKEY_USERS\[User SID]\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{[GUID]}\Count\[ROT13 of Path]\[ROT13 of Executable File Name]</td>
+                    <td class="border">Binary</td>
+                    <td class="border">[Binary Value]</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+      <h2 class="section"><a href="#DestinationDetails" class="collapse" id="a-DestinationDetails" onclick="showhide('DestinationDetails');">-</a> <a name="DestinationDetails">Details: Destination Host</a></h2>
+        <div class="section" id="div-DestinationDetails">
+          <h3 class="subsection"><a href="#DestinationDetails-EventLogs" class="collapse" id="a-DestinationDetails-EventLogs" onclick="showhide('DestinationDetails-EventLogs');">-</a> <a name="DestinationDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-DestinationDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event Log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (445)</li>
+                      <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (high port)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number (445)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address/Destination Port</span>: Destination IP address/Port number (high port)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (System)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound/acceptance)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID (4)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">2</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\Windows\PSEXESVC.exe)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5140</td>
+                    <td class="border">File Sharing</td>
+                    <td class="border">A network share object was accessed.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Network Information &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Shared Information &gt; Share Path</span>: Share path (\??\C:\Windows)</li>
+                      <li><span class="strong">Network Information &gt; Source/Source Port</span>: Execution source host/Port number</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege (ReadData or ListDirectory)</li>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name used (\\*\ADMIN$)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5145</td>
+                    <td class="border">Detailed File Share</td>
+                    <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Network Information &gt; Object Type</span>: Type of the created object (File)</li>
+                      <li><span class="strong">Shared Information &gt; Share Path</span>: Share path (\??\C:\Windows)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\ADMIN$)</li>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number</li>
+                      <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656/4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">A handle to an object was requested. / An attempt was made to access an object.<ul>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (including WriteData and WriteAttributes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">3</td>
+                    <td class="border">Security</td>
+                    <td class="border">4672</td>
+                    <td class="border">Special Logon</td>
+                    <td class="border">Privileges assigned to a new logon.<ul>
+                      <li><span class="strong">Privileges</span>: Assigned privileges (SeSecurityPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeTakeOwnershipPrivilege, SeDebugPrivilege, SeSystemEnvironmentPrivilege, SeLoadDriverPrivilege, SeImpersonatePrivilege)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4624</td>
+                    <td class="border">Logon</td>
+                    <td class="border">An account was successfully logged on.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">New Logon &gt; Logon ID/Logon GUID</span>: Session ID of the user who was logged on</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Package Name (NTLM only)</span>: NTLM version</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Logon Process</span>: Process used for logon (NtLmSsp)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number</li>
+                      <li><span class="strong">New Logon &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who was logged on</li>
+                      <li><span class="strong">Logon Type</span>: Logon path, method, etc. (3=Network)</li>
+                      <li><span class="strong">Network Information &gt; Workstation Name</span>: Name of the host that requested the logon</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Key Length</span>: Length of the key used for the authentication</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Authentication Package</span>: Authentication package used (NTLM)</li>
+                      <li><span class="strong">Network Information &gt; Source Network Address</span>: IP address that requested the logon</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="9">4</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000010)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\Type)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000003)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\Start)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000000)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\ErrorControl)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (%SystemRoot%\PSEXESVC.exe)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\ImagePath)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (PSEXESVC)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\DisplayName)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000001)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\WOW64)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (LocalSystem)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\ObjectName)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7045</td>
+                    <td class="border">A service was installed in the system.</td>
+                    <td class="border">A service was installed in the system.<ul>
+                      <li><span class="strong">Service start type</span>: Operation of trigger that starts the service (demand start)</li>
+                      <li><span class="strong">Service account</span>: Executing account (LocalSystem)</li>
+                      <li><span class="strong">Service type</span>: Type of the service to be executed (user mode service)</li>
+                      <li><span class="strong">Service Name</span>: Name displayed in the service list (PSEXESVC)</li>
+                      <li><span class="strong">Service File Name</span>: Service executable file (%SystemRoot%\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="6">5</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">10</td>
+                    <td class="border">Process accessed (rule: ProcessAccess)</td>
+                    <td class="border">Process accessed.<ul>
+                      <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                      <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                      <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x1FFFFF, 0x1400)</li>
+                      <li><span class="strong">SourceImage</span>: Path to access source process (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">10</td>
+                    <td class="border">Process accessed (rule: ProcessAccess)</td>
+                    <td class="border">Process accessed.<ul>
+                      <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                      <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                      <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x1410, 0x101410)</li>
+                      <li><span class="strong">SourceImage</span>: Path to access source process (C:\Windows\system32\svchost.exe)</li>
+                      <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">10</td>
+                    <td class="border">Process accessed (rule: ProcessAccess)</td>
+                    <td class="border">Process accessed.<ul>
+                      <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                      <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                      <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x1000, 0x1478)</li>
+                      <li><span class="strong">SourceImage</span>: Path to the access source process (C:\Windows\system32\lsass.exe)</li>
+                      <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to the parent process that created the new process. A record is confirmed on Windows 10 only.</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\PSEXESVC.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Running)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (PSEXESVC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">6</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\PSEXESVC.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\ProgramData\Microsoft\Crypto\RSA\S-1-5-18)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656/4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">A handle to an object was requested. / An attempt was made to access an object.<ul>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\ProgramData\Microsoft\Crypto\RSA\S-1-5-18, and under that)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">7</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (135)</li>
+                      <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (high port)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number (135)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address/Destination Port</span>: Destination IP address/Port number (high port)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound/acceptance)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">8</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (high port)</li>
+                      <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (high port)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address/Destination Port</span>: Destination IP address/Port number (high port)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="7">9</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\PSEXESVC.exe)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (Path to the executable file that was executed by PsExec)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\PSEXESVC.exe)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      </ul>
+                      <span class="strong">Remarks</span>: Another process is executed by PsExec. The subsequent operations depend on the process executed. If the Sysmon Event ID: 5 (Process terminated) for the executed process ID is output, it can be determined that the relevant process terminated.</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to the parent process that created the new process. A record can be confirmed on Windows 10 only (C:\Windows\PSEXESVC.exe)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul>
+                      <span class="strong">Remarks</span>: Another process is executed by PsExec. The subsequent operations depend on the process executed. If the Event ID: 4689 (Process terminated) for the executed process ID is output, it can be determined that the applicable process terminated.</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5140</td>
+                    <td class="border">File Sharing</td>
+                    <td class="border">A network share object was accessed.<ul>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name used (\\*\IPC$)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Network Information &gt; Source/Source Port</span>: Execution source host/Port number. The source port number that was used first for 445/tcp communication is used as the port number.</li>
+                      </ul>
+                      <span class="strong">Remarks</span>: A share path is provided to output the result to the source.</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5145</td>
+                    <td class="border">Detailed File Share</td>
+                    <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (including WriteData or AddFile)</li>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\IPC$)</li>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number. The source port number that was used first for 445/tcp communication is used as the port number.</li>
+                      <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5145</td>
+                    <td class="border">Detailed File Share</td>
+                    <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Network Information &gt; Object Type</span>: Type of the created object (File)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\IPC$)</li>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number</li>
+                      <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC-[Source Host Name]-[Source Process ID]-stdin)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5145</td>
+                    <td class="border">Detailed File Share</td>
+                    <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Network Information &gt; Object Type</span>: Type of the created object (File)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (including ReadData)</li>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\IPC$)</li>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number</li>
+                      <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC-[Source Host Name]-[Source Process ID]-stdout)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5145</td>
+                    <td class="border">Detailed File Share</td>
+                    <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Network Information &gt; Object Type</span>: Type of the created object (File)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (including SYNCHRONIZE)</li>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\IPC$)</li>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number</li>
+                      <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC-[Source Host Name]-[Source Process ID]-stderr)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">10</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\PSEXESVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">System</td>
+                    <td class="border">7036</td>
+                    <td class="border">Service Control Manager</td>
+                    <td class="border">The [Service Name] service entered the [Status] state.<ul>
+                      <li><span class="strong">Status</span>: State after the transition (Stopped)</li>
+                      <li><span class="strong">Service Name</span>: Target service name (PSEXESVC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">11</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\Windows\Prefetch\PSEXECSVC.EXE-[Random Number].pf)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656/4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">A handle to an object was requested. / An attempt was made to access an object.<ul>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\PSEXESVC.EXE-[Random Number].pf)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">12</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000001)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\DeleteFlag)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">13</td>
+                    <td class="border">Registry value set (rule: RegistryEvent)</td>
+                    <td class="border">Registry value set.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Details</span>: Setting value written to the registry (DWORD: 0x00000004)</li>
+                      <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC\Start)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="5">13</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (DeleteKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\services.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\PSEXESVC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4674</td>
+                    <td class="border">Sensitive Privilege Use</td>
+                    <td class="border">An operation was attempted on a privileged object.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Name of the object to be processed (PSEXESVC)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: Service that executed the process (SC Manager)</li>
+                      <li><span class="strong">Requested operation &gt; Privileges</span>: Requested privilege (DELETE)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\services.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the object to be processed (SERVICE OBJECT)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5145</td>
+                    <td class="border">Detailed File Share</td>
+                    <td class="border">A network share object was checked to see whether the client can be granted the desired access.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Network Information &gt; Object Type</span>: Type of the created object (File)</li>
+                      <li><span class="strong">Shared Information &gt; Share Path</span>: Share path (\\??\C:\Windows)</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege (DELETE)</li>
+                      <li><span class="strong">Shared Information &gt; Share Name</span>: Share name (\\*\ADMIN$)</li>
+                      <li><span class="strong">Network Information &gt; Source Address/Source Port</span>: Source IP address/Port number</li>
+                      <li><span class="strong">Shared Information &gt; Relative Target Name</span>: Relative target name from the share path (PSEXESVC.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656/4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">A handle to an object was requested. / An attempt was made to access an object.<ul>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege (DELETE)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4660</td>
+                    <td class="border">File System</td>
+                    <td class="border">An object was deleted.<ul>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege (DELETE)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\PSEXESVC.exe)</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#DestinationDetails-USNJournal" class="collapse" id="a-DestinationDetails-USNJournal" onclick="showhide('DestinationDetails-USNJournal');">-</a> <a name="DestinationDetails-USNJournal">USN Journal</a></h3>
+            <div class="section" id="div-DestinationDetails-USNJournal">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">File Name</th>
+                    <th class="border_header">Process</th>
+                    <th class="border_header">Attribute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">PSEXESVC.exe</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">2</td>
+                    <td class="border">PSEXESVC.exe</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">3</td>
+                    <td class="border">PSEXESVC.exe</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">4</td>
+                    <td class="border">PSEXESVC.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">5</td>
+                    <td class="border">PSEXESVC.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">6</td>
+                    <td class="border">PSEXESVC.EXE-[RANDOM].pf</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">7</td>
+                    <td class="border">PSEXESVC.exe</td>
+                    <td class="border">CLOSE+FILE_DELETE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#DestinationDetails-MFT" class="collapse" id="a-DestinationDetails-MFT" onclick="showhide('DestinationDetails-MFT');">-</a> <a name="DestinationDetails-MFT">MFT</a></h3>
+            <div class="section" id="div-DestinationDetails-MFT">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Header Flag</th>
+                    <th class="border_header">Validity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Drive Name]:\Windows\Prefetch\PSEXESVC.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#DestinationDetails-Prefetch" class="collapse" id="a-DestinationDetails-Prefetch" onclick="showhide('DestinationDetails-Prefetch');">-</a> <a name="DestinationDetails-Prefetch">Prefetch</a></h3>
+            <div class="section" id="div-DestinationDetails-Prefetch">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Prefetch File</th>
+                    <th class="border_header">Process Name</th>
+                    <th class="border_header">Process Path</th>
+                    <th class="border_header">Information That Can Be Confirmed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">PSEXESVC.EXE-[RANDOM].pf</td>
+                    <td class="border">PSEXESVC.EXE</td>
+                    <td class="border">\VOLUME{[GUID]}\WINDOWS\PSEXESVC.EXE</td>
+                    <td class="border">Last Run Time (last execution date and time)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#Packets" class="collapse" id="a-Packets" onclick="showhide('Packets');">-</a> <a name="Packets">Packet Capture</a></h2>
+        <div class="section" id="div-Packets">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">#</th>
+                <th class="border_header">Process</th>
+                <th class="border_header">Source Host</th>
+                <th class="border_header">Source Port Number</th>
+                <th class="border_header">Destination Host</th>
+                <th class="border_header">Destination Port Number</th>
+                <th class="border_header">Protocol/Application</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border" rowspan="2">1</td>
+                <td class="border">Session Setup Request, NTLMSSP_AUTH, User: [User Name]</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border"><br /></td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <td class="border" rowspan="2">2</td>
+                <td class="border">Tree Connect Request Tree: \\[NetBIOS Name at Destination]\ADMIN$</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Tree Connect Request Tree: \\[NetBIOS Name at Destination Host]\IPC$</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <td class="border" rowspan="8">3</td>
+                <td class="border">Create Request File: PSEXESVC</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Create Response File: PSEXESVC</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">GetInfo Request FILE_INFO/SMB2_FILE_STANDARD_INFO File: PSEXESVC</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">GetInfo Response</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Ioctl Request FSCTL_PIPE_TRANSCEIVE File: PSEXESVC</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Ioctl Response FSCTL_PIPE_TRANSCEIVE File: PSEXESVC</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Write Request Len:[Length] Off:0 File: PSEXESVC</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Write Response</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <td class="border" rowspan="3">4</td>
+                <td class="border">Create Request File: PSEXESVC-[Source Host Name]-[Source Process ID]-stdin</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Create Response File: PSEXESVC-[Source Host Name]-[Source Process ID]-stdin</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Close Request File: PSEXESVC-[Source Host Name]-[Source Process ID]-stdin</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <td class="border" rowspan="3">5</td>
+                <td class="border">Create Request File: PSEXESVC-[Source Host Name]-[Source Process ID]-stdout</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Create Response File: PSEXESVC-[Source Host Name]-[Source Process ID]-stdout</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Close Request File: PSEXESVC-[Source Host Name]-[Source Process ID]-stdout</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <td class="border" rowspan="3">6</td>
+                <td class="border">Create Request File: PSEXESVC-[Source Host Name]-[Source Process ID]-stderr</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Create Response File: PSEXESVC-[Source Host Name]-[Source Process ID]-stderr</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Close Request File: PSEXESVC-[Source Host Name]-[Source Process ID]-stderr</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <td class="border" rowspan="2">7</td>
+                <td class="border">Tree Disconnect Request</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Tree Disconnect Response</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <td class="border" rowspan="2">8</td>
+                <td class="border">Session Logoff Request</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">SMB2</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Session Logoff Response</td>
+                <td class="border">[Destination Host]</td>
+                <td class="border">445</td>
+                <td class="border">[Source Host]</td>
+                <td class="border">[High Port]</td>
+                <td class="border">SMB2</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#Notes" class="collapse" id="a-Notes" onclick="showhide('Notes');">-</a> <a name="Notes">Remarks</a></h2>
+        <div class="section" id="div-Notes">
+          <ul>
+            <li>The execution history of the program called by PsExec is recorded. (The details of the record depend on the program.)</li>
+          </ul>
+        </div>
+  </body>
+</html>

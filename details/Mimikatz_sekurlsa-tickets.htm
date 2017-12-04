@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>mimikatz (Ticket Acquisition)</title>
+    <link rel="stylesheet" type="text/css" href="common/style.css" />
+    <script language="JavaScript" type="text/javascript" src="common/script.js"></script>
+  </head>
+  <body>
+    <h1 class="title">mimikatz &gt; sekurlsa::tickets</h1>
+      <h2 class="toc"><a href="#toc" class="collapse" id="a-toc" onclick="showhide('toc');">-</a> <a name="toc">Table of Contents</a></h2>
+        <div class="toc" id="div-toc">
+          <ul>
+            <li><a href="#Summary">Tool Overview</a></li>
+            <li><a href="#ExecCondition">Tool Operation Overview</a></li>
+            <li><a href="#Findings">Information Acquired from Log</a></li>
+            <li><a href="#SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></li>
+            <li><a href="#KeyEvents">Main Information Recorded at Execution</a></li>
+            <li><a href="#HostDetails">Details: Host</a></li>
+          </ul>
+          <p class="toc_command"><a href="#" onclick="collapseall('s');">Open all sections</a> | <a href="#" onclick="collapseall('h');">Close all sections</a></p>
+          <hr class="section_divider" />
+        </div>
+      <h2 class="section"><a href="#Summary" class="collapse" id="a-Summary" onclick="showhide('Summary');">-</a> <a name="Summary">Tool Overview</a></h2>
+        <div class="section" id="div-Summary">
+          <dl class="table">
+            <dt class="table">Category</dt>
+              <dd class="table">Password and Hash Dump</dd>
+            <dt class="table">Description</dt>
+              <dd class="table">Acquires tickets for logged-on sessions.</dd>
+            <dt class="table">Example of Presumed Tool Use During an Attack</dt>
+              <dd class="table">This tool is used to log in to a remote host using acquired tickets.</dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#ExecCondition" class="collapse" id="a-ExecCondition" onclick="showhide('ExecCondition');">-</a> <a name="ExecCondition">Tool Operation Overview</a></h2>
+        <div class="section" id="div-ExecCondition">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">Item</th>
+                <th class="border_header">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border_header">OS</td>
+                <td class="border">Windows</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Belonging to Domain</td>
+                <td class="border">Not required</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Rights</td>
+                <td class="border">Administrator</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <h2 class="section"><a href="#Findings" class="collapse" id="a-Findings" onclick="showhide('Findings');">-</a> <a name="Findings">Information Acquired from Log</a></h2>
+        <div class="section" id="div-Findings">
+          <dl class="table">
+            <dt class="table">Standard Settings</dt>
+              <dd class="table"><ul>
+                <li>Host<ul>
+                  <li>Execution history (Prefetch)</li>
+                  </ul></li>
+                </ul></dd>
+            <dt class="table">Additional Settings</dt>
+              <dd class="table"><ul>
+                <li>Host<ul>
+                  <li>Execution history (audit policy, Sysmon)</li>
+                  <li>Reading of process memory from lsass.exe (audit policy)</li>
+                  <li>A record that a file that output the ticket was created (audit policy, Sysmon, USN Journal)</li>
+                  </ul></li>
+                </ul></dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#SuccessCondition" class="collapse" id="a-SuccessCondition" onclick="showhide('SuccessCondition');">-</a> <a name="SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></h2>
+        <div class="section" id="div-SuccessCondition">
+          <ul>
+            <li>An output ticket file (.kirbi file) is created </li>
+          </ul>
+        </div>
+      <h2 class="section"><a href="#KeyEvents" class="collapse" id="a-KeyEvents" onclick="showhide('KeyEvents');">-</a> <a name="KeyEvents">Main Information Recorded at Execution</a></h2>
+        <div class="section" id="div-KeyEvents">
+          <h3 class="subsection"><a href="#KeyEvents-Host" class="collapse" id="a-KeyEvents-Host" onclick="showhide('KeyEvents-Host');">-</a> <a name="KeyEvents-Host">Host</a></h3>
+            <div class="section" id="div-KeyEvents-Host">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command (path to the tool)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Security</td>
+                      <td class="border">4663</td>
+                      <td class="border">File System</td>
+                      <td class="border">An attempt was made to access an object.<ul>
+                        <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (reading from process memory)</li>
+                        <li><span class="strong">Object &gt; Object Type</span>: Target category (Process)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (\Device\HarddiskVolume2\Windows\System32\lsass.exe)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">Security</td>
+                      <td class="border">4703</td>
+                      <td class="border">Token Right Adjusted Events</td>
+                      <td class="border">A token right was adjusted.<ul>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Enabled Privileges</span>: Enabled privileges (SeDebugPrivilege)</li>
+                        <li><span class="strong">Target Account &gt; Security ID/Account Name/Account Domain</span>: Target user SID/Account name/Domain</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process executed (path to the tool)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Security</td>
+                      <td class="border">4663</td>
+                      <td class="border">File System</td>
+                      <td class="border">An attempt was made to access an object.<ul>
+                        <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (path to the tool)</li>
+                        <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Current Directory]\[Service Name]-[Domain].kirbi)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>USN journal</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">File Name</th>
+                      <th class="border_header">Process</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">[Service Name]-[Domain Name].kirbi</td>
+                      <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>Prefetch</h4>
+                <ul>
+                  <li>C:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf</li>
+                </ul>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#HostDetails" class="collapse" id="a-HostDetails" onclick="showhide('HostDetails');">-</a> <a name="HostDetails">Details: Host</a></h2>
+        <div class="section" id="div-HostDetails">
+          <h3 class="subsection"><a href="#HostDetails-EventLogs" class="collapse" id="a-HostDetails-EventLogs" onclick="showhide('HostDetails-EventLogs');">-</a> <a name="HostDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-HostDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event Log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (path to the tool)</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (High)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to parent process that created the new process</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (2)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">2</td>
+                    <td class="border">Security</td>
+                    <td class="border">4673</td>
+                    <td class="border">Sensitive Privilege Use</td>
+                    <td class="border">A privileged service was called.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process &gt; Process ID</span>: ID of the process that used the privilege</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Service Request Information &gt; Privilege</span>: Privileges used (SeTcbPrivilege)</li>
+                      <li><span class="strong">Process &gt; Process Name</span>: Process that used the privilege (path to the tool)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4673</td>
+                    <td class="border">Sensitive Privilege Use</td>
+                    <td class="border">A privileged service was called.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process &gt; Process ID</span>: ID of the process that used the privilege</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Service Request Information &gt; Privilege</span>: Privileges used (SeTcbPrivilege)</li>
+                      <li><span class="strong">Process &gt; Process Name</span>: Process that used the privilege (path to the tool)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">3</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">4</td>
+                    <td class="border">Security</td>
+                    <td class="border">4703</td>
+                    <td class="border">Token Right Adjusted Events</td>
+                    <td class="border">A token right was adjusted.<ul>
+                      <li><span class="strong">Disabled Privileges</span>: Disabled privileges (-)</li>
+                      <li><span class="strong">Target Account &gt; Security ID/Account Name/Account Domain</span>: Target user SID/Account name/Domain</li>
+                      <li><span class="strong">Target Account &gt; Logon ID</span>: Session ID of the target user</li>
+                      <li><span class="strong">Enabled Privileges</span>: Enabled privileges (SeDebugPrivilege)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: ID of the executed process</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process executed (path to the tool)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (reading from process memory)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (\Device\HarddiskVolume2\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (path to the tool)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: File type (Process)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (reading from process memory)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name</li>
+                      <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (\Device\HarddiskVolume2\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Target category (Process)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (path to the tool)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">5</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Current Directory]\[Service Name].kirbi)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (path to the tool)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Current Directory]\[Service Name]-[Domain].kirbi)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (path to the tool)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (path to the tool)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">6</td>
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (path to the tool)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (path to the tool)</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#HostDetails-USNJournal" class="collapse" id="a-HostDetails-USNJournal" onclick="showhide('HostDetails-USNJournal');">-</a> <a name="HostDetails-USNJournal">USN Journal</a></h3>
+            <div class="section" id="div-HostDetails-USNJournal">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">File Name</th>
+                    <th class="border_header">Process</th>
+                    <th class="border_header">Attribute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="3">1</td>
+                    <td class="border">[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">2</td>
+                    <td class="border">[Service Name]-[Domain Name].kirbi</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">[Service Name]-[Domain Name].kirbi</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">[Service Name]-[Domain Name].kirbi</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#HostDetails-MFT" class="collapse" id="a-HostDetails-MFT" onclick="showhide('HostDetails-MFT');">-</a> <a name="HostDetails-MFT">MFT</a></h3>
+            <div class="section" id="div-HostDetails-MFT">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Header Flag</th>
+                    <th class="border_header">Validity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Drive Name]:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">2</td>
+                    <td class="border">[Current Directory]\[Service Name]-[Domain].kirbi</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#HostDetails-Prefetch" class="collapse" id="a-HostDetails-Prefetch" onclick="showhide('HostDetails-Prefetch');">-</a> <a name="HostDetails-Prefetch">Prefetch</a></h3>
+            <div class="section" id="div-HostDetails-Prefetch">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Prefetch File</th>
+                    <th class="border_header">Process Name</th>
+                    <th class="border_header">Process Path</th>
+                    <th class="border_header">Information That Can Be Confirmed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">C:\Windows\Prefetch\[Executable File Name of Tool]-[RANDOM].pf</td>
+                    <td class="border">[Executable File Name of Tool]</td>
+                    <td class="border">[Path to Tool]</td>
+                    <td class="border">Last Run Time (last execution date and time)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+  </body>
+</html>

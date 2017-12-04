@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>dcdiag</title>
+    <link rel="stylesheet" type="text/css" href="common/style.css" />
+    <script language="JavaScript" type="text/javascript" src="common/script.js"></script>
+  </head>
+  <body>
+    <h1 class="title">dcdiag</h1>
+      <h2 class="toc"><a href="#toc" class="collapse" id="a-toc" onclick="showhide('toc');">-</a> <a name="toc">Table of Contents</a></h2>
+        <div class="toc" id="div-toc">
+          <ul>
+            <li><a href="#Summary">Tool Overview</a></li>
+            <li><a href="#ExecCondition">Tool Operation Overview</a></li>
+            <li><a href="#Findings">Information Acquired from Log</a></li>
+            <li><a href="#SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></li>
+            <li><a href="#KeyEvents">Main Information Recorded at Execution</a></li>
+            <li><a href="#ADDetails">Details: Domain Controller</a></li>
+            <li><a href="#Notes">Remarks</a></li>
+          </ul>
+          <p class="toc_command"><a href="#" onclick="collapseall('s');">Open all sections</a> | <a href="#" onclick="collapseall('h');">Close all sections</a></p>
+          <hr class="section_divider" />
+        </div>
+      <h2 class="section"><a href="#Summary" class="collapse" id="a-Summary" onclick="showhide('Summary');">-</a> <a name="Summary">Tool Overview</a></h2>
+        <div class="section" id="div-Summary">
+          <dl class="table">
+            <dt class="table">Category</dt>
+              <dd class="table">Information Collection</dd>
+            <dt class="table">Description</dt>
+              <dd class="table">Analyzes and examines the status of the Domain Controller.</dd>
+            <dt class="table">Example of Presumed Tool Use During an Attack</dt>
+              <dd class="table">This tool is used to investigate problems with the Domain Controller and use the results to examine attack methods.</dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#ExecCondition" class="collapse" id="a-ExecCondition" onclick="showhide('ExecCondition');">-</a> <a name="ExecCondition">Tool Operation Overview</a></h2>
+        <div class="section" id="div-ExecCondition">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">Item</th>
+                <th class="border_header">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border_header">OS</td>
+                <td class="border">Windows Server</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Belonging to Domain</td>
+                <td class="border">Not required</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Rights</td>
+                <td class="border">Administrator</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Service</td>
+                <td class="border">Active Directory Domain Services</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <h2 class="section"><a href="#Findings" class="collapse" id="a-Findings" onclick="showhide('Findings');">-</a> <a name="Findings">Information Acquired from Log</a></h2>
+        <div class="section" id="div-Findings">
+          <dl class="table">
+            <dt class="table">Standard Settings</dt>
+              <dd class="table"><ul>
+                <li>Host<ul>
+                  <li>Execution history (Prefetch)</li>
+                  </ul></li>
+                </ul></dd>
+            <dt class="table">Additional Settings</dt>
+              <dd class="table"><ul>
+                <li>Host<ul>
+                  <li>The fact that dcdiag.exe was executed and details of the executed test (Sysmon)</li>
+                  </ul></li>
+                </ul></dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#SuccessCondition" class="collapse" id="a-SuccessCondition" onclick="showhide('SuccessCondition');">-</a> <a name="SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></h2>
+        <div class="section" id="div-SuccessCondition">
+          <ul>
+            <li>The successful execution of the tool cannot be determined from event logs, execution history, and so on. (If the extracted account information is saved, it can be considered that tool execution was successful).</li>
+          </ul>
+        </div>
+      <h2 class="section"><a href="#KeyEvents" class="collapse" id="a-KeyEvents" onclick="showhide('KeyEvents');">-</a> <a name="KeyEvents">Main Information Recorded at Execution</a></h2>
+        <div class="section" id="div-KeyEvents">
+          <h3 class="subsection"><a href="#KeyEvents-AD" class="collapse" id="a-KeyEvents-AD" onclick="showhide('KeyEvents-AD');">-</a> <a name="KeyEvents-AD">Domain Controller</a></h3>
+            <div class="section" id="div-KeyEvents-AD">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command (the details of the executed test can be confirmed from the option)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">3</td>
+                      <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                      <td class="border">Network connection detected.<ul>
+                        <li><span class="strong">Protocol</span>: Protocol (udp)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                        <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (53)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">3</td>
+                      <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                      <td class="border">Network connection detected.<ul>
+                        <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                        <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (ports: 389,135, high port)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Security</td>
+                      <td class="border">4689</td>
+                      <td class="border">Process Termination</td>
+                      <td class="border">A process has exited.<ul>
+                        <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                        <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#ADDetails" class="collapse" id="a-ADDetails" onclick="showhide('ADDetails');">-</a> <a name="ADDetails">Details: Domain Controller</a></h2>
+        <div class="section" id="div-ADDetails">
+          <h3 class="subsection"><a href="#ADDetails-EventLogs" class="collapse" id="a-ADDetails-EventLogs" onclick="showhide('ADDetails-EventLogs');">-</a> <a name="ADDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-ADDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event Log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (the details of the executed test can be confirmed from the option)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">2</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (389)</li>
+                      <li><span class="strong">SourcePort</span>: Source Port Number</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (389)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (389)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">3</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (135)</li>
+                      <li><span class="strong">SourcePort</span>: Source Port Number</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (135)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (135)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\svchost.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">4</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">5</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (SourcePort of the immediately prior Sysmon Event ID: 3)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (DestinationPort of the immediately prior Sysmon Event ID: 3)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">6</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (389)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (389)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">7</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (389)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (389)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">8</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (udp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (53)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (53)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (17=UDP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dcdiag.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">9</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (udp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dns.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (53)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (53)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (17=UDP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\dns.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound, permission)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">10</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\dcdiag.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#Notes" class="collapse" id="a-Notes" onclick="showhide('Notes');">-</a> <a name="Notes">Remarks</a></h2>
+        <div class="section" id="div-Notes">
+          <ul>
+            <li>This tool is used to examine the status of the Domain Controller. By entering correct authentication information at execution, it is possible to acquire information even from a client that does not participate in the domain.</li>
+            <li>In Event ID: 4689 (Process Termination), if dcdiag.exe was executed successfully, the return value will be 0 regardless of the success or failure of the examination. For this reason, it is not possible to confirm the success or failure from the log, except when the results were saved to a file with the &quot;-f&quot; option.</li>
+          </ul>
+        </div>
+  </body>
+</html>

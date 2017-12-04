@@ -1,0 +1,125 @@
+* {
+  font-family:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"游ゴシック体","Yu Gothic",YuGothic,"Hiragino Kaku Gothic ProN", Meiryo,sans-serif;
+}
+
+a.collapse {
+    border: 1px solid;
+    color: #000000;
+    font-size: smaller;
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-decoration: none;
+    font-family:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"游ゴシック体","Yu Gothic",YuGothic,"Hiragino Kaku Gothic ProN", Meiryo,sans-serif;
+}
+
+h1.title {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+h2.section {
+}
+
+div.section {
+    display: block;
+    margin-bottom: 5em;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+div.toc {
+    display: block;
+    margin-bottom: 5em;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+dl.table {
+}
+
+dt.table {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #000000;
+    border-left-width: 6px;
+    border-left-style: solid;
+    border-left-color: #000000;
+    font-weight: bold;
+    margin-bottom: 1em;
+    margin-top: 2em;
+    padding-bottom: 3px;
+    padding-left: 10px;
+}
+
+dd.table {
+    margin-left: 0;
+}
+
+hr.section_divider {
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-width: 3px;
+}
+
+span.strong {
+    font-weight: bold;
+}
+
+table.border {
+    border-color: #000000;
+    border-style: solid;
+    border-width: 2px;
+}
+
+td.border {
+    border-style: solid;
+    border-width: 1px;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+td.border_header {
+    border-style: solid;
+    border-width: 1px;
+    font-weight: bold;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+th.border_header {
+    background-color: #000000 !important;
+    border-style: solid;
+    border-width: 1px;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+tr.border {
+    border-style: solid;
+    border-width: 1px;
+}
+
+
+@media print {
+  a.collapse {
+    display: none;
+  }
+  div.toc {
+    display: none;
+    margin-bottom: 5em;
+    padding-left: 1%;
+    padding-right: 1%;
+  }
+  h2.toc {
+    display: none;
+  }
+  p.toc_command {
+    display: none;
+  }
+  thead {
+    display: table-header-group;
+  }
+}

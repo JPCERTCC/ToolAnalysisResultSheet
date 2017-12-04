@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>WinRM</title>
+    <link rel="stylesheet" type="text/css" href="common/style.css" />
+    <script language="JavaScript" type="text/javascript" src="common/script.js"></script>
+  </head>
+  <body>
+    <h1 class="title">WinRM</h1>
+      <h2 class="toc"><a href="#toc" class="collapse" id="a-toc" onclick="showhide('toc');">-</a> <a name="toc">Table of Contents</a></h2>
+        <div class="toc" id="div-toc">
+          <ul>
+            <li><a href="#Summary">Tool Overview</a></li>
+            <li><a href="#ExecCondition">Tool Operation Overview</a></li>
+            <li><a href="#Findings">Information Acquired from Log</a></li>
+            <li><a href="#SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></li>
+            <li><a href="#KeyEvents">Main Information Recorded at Execution</a></li>
+            <li><a href="#SourceDetails">Details: Source Host</a></li>
+            <li><a href="#DestinationDetails">Details: Destination Host</a></li>
+            <li><a href="#Notes">Remarks</a></li>
+          </ul>
+          <p class="toc_command"><a href="#" onclick="collapseall('s');">Open all sections</a> | <a href="#" onclick="collapseall('h');">Close all sections</a></p>
+          <hr class="section_divider" />
+        </div>
+      <h2 class="section"><a href="#Summary" class="collapse" id="a-Summary" onclick="showhide('Summary');">-</a> <a name="Summary">Tool Overview</a></h2>
+        <div class="section" id="div-Summary">
+          <dl class="table">
+            <dt class="table">Category</dt>
+              <dd class="table">Command Execution</dd>
+            <dt class="table">Description</dt>
+              <dd class="table">Steals information from a remote host.</dd>
+            <dt class="table">Example of Presumed Tool Use During an Attack</dt>
+              <dd class="table">This tool is used for an investigation before executing a remote command.</dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#ExecCondition" class="collapse" id="a-ExecCondition" onclick="showhide('ExecCondition');">-</a> <a name="ExecCondition">Tool Operation Overview</a></h2>
+        <div class="section" id="div-ExecCondition">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">Item</th>
+                <th class="border_header">Source Host</th>
+                <th class="border_header">Destination Host</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border_header">OS</td>
+                <td class="border" colspan="2">Windows</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Belonging to Domain</td>
+                <td class="border" colspan="2">Not required</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Rights</td>
+                <td class="border">Standard user</td>
+                <td class="border">Administrator</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Communication Protocol</td>
+                <td class="border" colspan="2">5985/tcp (HTTP) or 5986/tcp (HTTPS)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <h2 class="section"><a href="#Findings" class="collapse" id="a-Findings" onclick="showhide('Findings');">-</a> <a name="Findings">Information Acquired from Log</a></h2>
+        <div class="section" id="div-Findings">
+          <dl class="table">
+            <dt class="table">Standard Settings</dt>
+              <dd class="table"><ul>
+                <li>Source host<ul>
+                  <li>Execution history (Prefetch)</li>
+                  <li>WinRM execution history (Microsoft-Windows-WinRM/Operational)</li>
+                  </ul></li>
+                <li>Destination Host<ul>
+                  <li>Execution history (Prefetch)</li>
+                  <li>WinRM execution history (Microsoft-Windows-WinRM/Operational)</li>
+                  </ul></li>
+                </ul></dd>
+            <dt class="table">Additional Settings</dt>
+              <dd class="table"><ul>
+                <li>Source host<ul>
+                  <li>Execution history (audit policy, Sysmon)</li>
+                  <li>Communication via 5985/tcp (audit policy, Sysmon)</li>
+                  </ul></li>
+                <li>Destination Host<ul>
+                  <li>Execution history (audit policy, Sysmon)</li>
+                  <li>Communication via 5985/tcp (audit policy, Sysmon)</li>
+                  </ul></li>
+                </ul></dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#SuccessCondition" class="collapse" id="a-SuccessCondition" onclick="showhide('SuccessCondition');">-</a> <a name="SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></h2>
+        <div class="section" id="div-SuccessCondition">
+          <ul>
+            <li>Source Host: A log indicating that cscript.exe accessed the destination host is recorded in Event IDs 1 and 5 of event log &quot;Sysmon&quot;.</li>
+          </ul>
+        </div>
+      <h2 class="section"><a href="#KeyEvents" class="collapse" id="a-KeyEvents" onclick="showhide('KeyEvents');">-</a> <a name="KeyEvents">Main Information Recorded at Execution</a></h2>
+        <div class="section" id="div-KeyEvents">
+          <h3 class="subsection"><a href="#KeyEvents-Source" class="collapse" id="a-KeyEvents-Source" onclick="showhide('KeyEvents-Source');">-</a> <a name="KeyEvents-Source">Source Host</a></h3>
+            <div class="section" id="div-KeyEvents-Source">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\cmd.exe)</li>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command (cscript  //nologo &quot;C:\Windows\System32\winrm.vbs&quot; e winrm/config/listener -r:[Destination Host])</li>
+                        <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (&quot;C:\Windows\system32\cmd.exe&quot;)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">3</td>
+                      <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                      <td class="border">Network connection detected.<ul>
+                        <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (source host)</li>
+                        <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (destination port: 5985)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">Security</td>
+                      <td class="border">4656</td>
+                      <td class="border">File System/Other Object Access Events</td>
+                      <td class="border">A handle to an object was requested.<ul>
+                        <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (READ_CONTROL, reference of key values, enumeration of sub keys, notice on key changes)</li>
+                        <li><span class="strong">Object &gt; Object Type</span>: File type (Key)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\cscript.exe)</li>
+                        <li><span class="strong">Object &gt; Object Name</span>: Target file name (\REGISTRY\MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WSMAN\Client)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                      <td class="border">143</td>
+                      <td class="border">Response Processing</td>
+                      <td class="border">Received a response from the network layer. Status: [Opcode]<ul>
+                        <li><span class="strong">Opcode</span>: Return value (200 HTTP_STATUS_OK)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">5</td>
+                      <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                      <td class="border">80</td>
+                      <td class="border">Processing of Request</td>
+                      <td class="border">Sending the request for operation [Operation]. Destination computer and port [Host]:[Port]<ul>
+                        <li><span class="strong">Operation</span>: Requested process (Enumeration)</li>
+                        <li><span class="strong">Port</span>: Source port number (5985)</li>
+                        <li><span class="strong">Host</span>: Requested resource (destination)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>Prefetch</h4>
+                <ul>
+                  <li>C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf</li>
+                </ul>
+            </div>
+          <h3 class="subsection"><a href="#KeyEvents-Destination" class="collapse" id="a-KeyEvents-Destination" onclick="showhide('KeyEvents-Destination');">-</a> <a name="KeyEvents-Destination">Destination Host</a></h3>
+            <div class="section" id="div-KeyEvents-Destination">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">3</td>
+                      <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                      <td class="border">Network connection detected.<ul>
+                        <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                        <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                        <li><span class="strong">SourceIp/SourceHostname/SourcePort</span>: Source IP address/Host name/Port number (destination port: 5985)</li>
+                        <li><span class="strong">DestinationIp/DestinationHostname/DestinationPort</span>: Destination IP address/Host name/Port number (source host)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Security</td>
+                      <td class="border">4656</td>
+                      <td class="border">File System/Other Object Access Events</td>
+                      <td class="border">A handle to an object was requested.<ul>
+                        <li><span class="strong">Object &gt; Object Type</span>: File type (Unknown)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Object &gt; Object Server</span>: Service that manages the object (WS-Management Listener)</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                        <li><span class="strong">Object &gt; Object Name</span>: Target file name (Unknown)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">Security</td>
+                      <td class="border">4624</td>
+                      <td class="border">Logon</td>
+                      <td class="border">An account was successfully logged on.<ul>
+                        <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">New Logon &gt; Logon ID/Logon GUID</span>: Session ID of the user who was logged on</li>
+                        <li><span class="strong">Detailed Authentication Information &gt; Logon Process</span>: Process used for logon (Kerberos)</li>
+                        <li><span class="strong">New Logon &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who was logged on</li>
+                        <li><span class="strong">Logon Type</span>: Logon path, method, etc. (3=Network)</li>
+                        <li><span class="strong">Network Information &gt; Workstation Name</span>: Name of the host that requested the logon</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file</li>
+                        <li><span class="strong">Network Information &gt; Source Network Address</span>: IP address that requested the logon</li>
+                        <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Security</td>
+                      <td class="border">4634</td>
+                      <td class="border">Logoff</td>
+                      <td class="border">An account was logged off.<ul>
+                        <li><span class="strong">Logon Type</span>: Logon path, method, etc. (3=Network)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">5</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\svchost.exe)</li>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command (C:\Windows\system32\wbem\wmiprvse.exe -secured -Embedding)</li>
+                        <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\system32\svchost.exe -k DcomLaunch)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\NETWORK SERVICE)</li>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\wbem\WmiPrvSE.exe)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>Prefetch</h4>
+                <ul>
+                  <li>C:\Windows\Prefetch\WMIPRVSE.EXE-[RANDOM].pf</li>
+                </ul>
+              <h4>Registry entry</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Path</th>
+                      <th class="border_header">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Reliability Analysis\RAC\WmiLastTime</td>
+                      <td class="border">(RANDOM)</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#SourceDetails" class="collapse" id="a-SourceDetails" onclick="showhide('SourceDetails');">-</a> <a name="SourceDetails">Details: Source Host</a></h2>
+        <div class="section" id="div-SourceDetails">
+          <h3 class="subsection"><a href="#SourceDetails-EventLogs" class="collapse" id="a-SourceDetails-EventLogs" onclick="showhide('SourceDetails-EventLogs');">-</a> <a name="SourceDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-SourceDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event Log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\cmd.exe)</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory (C:\Windows\system32\)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (cscript  //nologo &quot;C:\Windows\System32\winrm.vbs&quot; e winrm/config/listener -r:[Destination Host])</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (High)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (&quot;C:\Windows\system32\cmd.exe&quot;)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to parent process that created the new process</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">2</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (READ_CONTROL, reference of key values, enumeration of sub keys, notice on key changes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (\REGISTRY\MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WSMAN\Client)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: File type (Key)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">3</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SOFTWARE\Microsoft\Windows Script Host\Settings)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\USER\[User SID]\Software\Microsoft\Windows Script Host\Settings)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\USER\[User SID]\Software\Microsoft\Windows\CurrentVersion\WinTrust\Trust Providers\Software Publishing)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\Tcpip\Parameters)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">4</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (destination host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (destination host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (88)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (source host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (source host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (88)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (Domain Controller)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">5</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (destination host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (destination host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (5985)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (source host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (source host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (5985)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (destination host)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\cscript.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="6">6</td>
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">166</td>
+                    <td class="border">User Authentication</td>
+                    <td class="border">The chosen authentication mechanism is [authentication mechanism].<ul>
+                      <li><span class="strong">Authentication Method</span>: Authentication method used (Kerberos)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">80</td>
+                    <td class="border">Processing of Request</td>
+                    <td class="border">Sending the request for operation [Operation]. Destination computer and port [Host]:[Port]<ul>
+                      <li><span class="strong">Operation</span>: Requested process (Enumeration)</li>
+                      <li><span class="strong">Port</span>: Source port number (5985)</li>
+                      <li><span class="strong">Host</span>: Requested resource (destination)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">166</td>
+                    <td class="border">User Authentication</td>
+                    <td class="border">The chosen authentication mechanism is [authentication mechanism].<ul>
+                      <li><span class="strong">Authentication Method</span>: Authentication method used (Kerberos)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">143</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">Received a response from the network layer. Status: [Opcode]<ul>
+                      <li><span class="strong">Opcode</span>: Return value (200 HTTP_STATUS_OK)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">143</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">Received a response from the network layer. Status: [Opcode]<ul>
+                      <li><span class="strong">Opcode</span>: Return value (200 HTTP_STATUS_OK)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">132</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">WSMan operation [Operation] completed successfully.<ul>
+                      <li><span class="strong">Operation</span>: Process performed (Enumeration)</li>
+                      <li><span class="strong">Opcode</span>: Return value (normal)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">7</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">8</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">11</td>
+                    <td class="border">File created (rule: FileCreate)</td>
+                    <td class="border">File created.<ul>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetFilename</span>: Created file (C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">9</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\cmd.exe)</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory (C:\Windows\system32\)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (cscript  //nologo &quot;C:\Windows\System32\winrm.vbs&quot; get winrm/config -r:[Target])</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (High)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (&quot;C:\Windows\system32\cmd.exe&quot;)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to parent process that created the new process</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">10</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (READ_CONTROL, reference of key values, enumeration of sub keys, notice on key changes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (\REGISTRY\MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WSMAN\Client)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: File type (Key)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">11</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\USER\[User SID]\Software\Microsoft\Windows Script Host\Settings)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\USER\[User SID]\Software\Microsoft\Windows\CurrentVersion\WinTrust\Trust Providers\Software Publishing)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\Tcpip\Parameters)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">12</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (destination host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (destination host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (5985)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (source host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (source host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (5985)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (destination host)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\cscript.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="6">13</td>
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">166</td>
+                    <td class="border">User Authentication</td>
+                    <td class="border">The chosen authentication mechanism is [authentication mechanism].<ul>
+                      <li><span class="strong">Authentication Method</span>: Authentication method used (Kerberos)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">80</td>
+                    <td class="border">Processing of Request</td>
+                    <td class="border">Sending the request for operation [Operation]. Destination computer and port [Host]:[Port]<ul>
+                      <li><span class="strong">Operation</span>: Requested process (Get)</li>
+                      <li><span class="strong">Port</span>: Source port number (5985)</li>
+                      <li><span class="strong">Host</span>: Requested resource (target)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">166</td>
+                    <td class="border">User Authentication</td>
+                    <td class="border">The chosen authentication mechanism is [authentication mechanism].<ul>
+                      <li><span class="strong">Authentication Method</span>: Authentication method used (Kerberos)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">143</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">Received a response from the network layer. Status: [Opcode]<ul>
+                      <li><span class="strong">Opcode</span>: Return value (200 HTTP_STATUS_OK)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">143</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">Received a response from the network layer. Status: [Opcode]<ul>
+                      <li><span class="strong">Opcode</span>: Return value (200 HTTP_STATUS_OK)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">132</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">WSMan operation [Operation] completed successfully.<ul>
+                      <li><span class="strong">Operation</span>: Process performed (Get)</li>
+                      <li><span class="strong">Opcode</span>: Return value (normal)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">14</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">15</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">16</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\cmd.exe)</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory (C:\Windows\system32\)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (cscript  //nologo &quot;C:\Windows\System32\winrm.vbs&quot; get wmicimv2/Win32_Service?Name=WinRM -r:[Destination])</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (High)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\system32\cmd.exe)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">17</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (READ_CONTROL, reference of key values, enumeration of sub keys, notice on key changes)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (\REGISTRY\MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WSMAN\Client)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: File type (Key)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="4">18</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SOFTWARE\Microsoft\Windows Script Host\Settings)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\USER\[User SID]\Software\Microsoft\Windows Script Host\Settings)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\USER\[User SID]\Software\Microsoft\Windows\CurrentVersion\WinTrust\Trust Providers\Software Publishing)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\cscript.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SYSTEM\ControlSet001\services\Tcpip\Parameters)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">19</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (destination host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (destination host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (5985)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (source host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (source host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (5985)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (destination host)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\cscript.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="6">20</td>
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">166</td>
+                    <td class="border">User Authentication</td>
+                    <td class="border">The chosen authentication mechanism is [authentication mechanism].<ul>
+                      <li><span class="strong">Authentication Method</span>: Authentication method used (Kerberos)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">80</td>
+                    <td class="border">Processing of Request</td>
+                    <td class="border">Sending the request for operation [Operation]. Destination computer and port [Host]:[Port]<ul>
+                      <li><span class="strong">Operation</span>: Requested process (Get)</li>
+                      <li><span class="strong">Port</span>: Source port number (5985)</li>
+                      <li><span class="strong">Host</span>: Requested resource (destination)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">166</td>
+                    <td class="border">User Authentication</td>
+                    <td class="border">The chosen authentication mechanism is [authentication mechanism].<ul>
+                      <li><span class="strong">Authentication Method</span>: Authentication method used (Kerberos)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">143</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">Received a response from the network layer. Status: [Opcode]<ul>
+                      <li><span class="strong">Opcode</span>: Return value (200 HTTP_STATUS_OK)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">143</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">Received a response from the network layer. Status: [Opcode]<ul>
+                      <li><span class="strong">Opcode</span>: Return value (200 HTTP_STATUS_OK)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WinRM/Operational</td>
+                    <td class="border">132</td>
+                    <td class="border">Response Processing</td>
+                    <td class="border">WSMan operation [Operation] completed successfully.<ul>
+                      <li><span class="strong">Operation</span>: Process performed (Get)</li>
+                      <li><span class="strong">Opcode</span>: Return value (normal)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">21</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">5</td>
+                    <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                    <td class="border">Process terminated.<ul>
+                      <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4689</td>
+                    <td class="border">Process Termination</td>
+                    <td class="border">A process has exited.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value (0x0)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\cscript.exe)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">22</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed. (The handle to an object was closed.)<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-USNJournal" class="collapse" id="a-SourceDetails-USNJournal" onclick="showhide('SourceDetails-USNJournal');">-</a> <a name="SourceDetails-USNJournal">USN Journal</a></h3>
+            <div class="section" id="div-SourceDetails-USNJournal">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">File Name</th>
+                    <th class="border_header">Process</th>
+                    <th class="border_header">Attribute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="3">1</td>
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">2</td>
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_TRUNCATION</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_EXTEND+DATA_TRUNCATION</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">CLOSE+DATA_EXTEND+DATA_TRUNCATION</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">3</td>
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_TRUNCATION</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_EXTEND+DATA_TRUNCATION</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">CLOSE+DATA_EXTEND+DATA_TRUNCATION</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-MFT" class="collapse" id="a-SourceDetails-MFT" onclick="showhide('SourceDetails-MFT');">-</a> <a name="SourceDetails-MFT">MFT</a></h3>
+            <div class="section" id="div-SourceDetails-MFT">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Header Flag</th>
+                    <th class="border_header">Validity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Drive Name]:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#SourceDetails-Prefetch" class="collapse" id="a-SourceDetails-Prefetch" onclick="showhide('SourceDetails-Prefetch');">-</a> <a name="SourceDetails-Prefetch">Prefetch</a></h3>
+            <div class="section" id="div-SourceDetails-Prefetch">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Prefetch File</th>
+                    <th class="border_header">Process Name</th>
+                    <th class="border_header">Process Path</th>
+                    <th class="border_header">Information That Can Be Confirmed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">C:\Windows\Prefetch\CSCRIPT.EXE-[RANDOM].pf</td>
+                    <td class="border">CSCRIPT.EXE</td>
+                    <td class="border">C:\WINDOWS\SYSTEM32\CSCRIPT.EXE</td>
+                    <td class="border">Last Run Time (last execution date and time)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+      <h2 class="section"><a href="#DestinationDetails" class="collapse" id="a-DestinationDetails" onclick="showhide('DestinationDetails');">-</a> <a name="DestinationDetails">Details: Destination Host</a></h2>
+        <div class="section" id="div-DestinationDetails">
+          <h3 class="subsection"><a href="#DestinationDetails-EventLogs" class="collapse" id="a-DestinationDetails-EventLogs" onclick="showhide('DestinationDetails-EventLogs');">-</a> <a name="DestinationDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-DestinationDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event Log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">Microsoft-Windows-WMI-Activity/Operational</td>
+                    <td class="border">5857</td>
+                    <td class="border">WMI-Activity</td>
+                    <td class="border">[Provider] provider started with result code [Result Code]. Host Process = [Host Process]; Process ID = [Process ID]; Provider Path = [Provider Path]<ul>
+                      <li><span class="strong">Provider Path</span>: File of the provider (%systemroot%\system32\wbem\cimwin32.dll)</li>
+                      <li><span class="strong">Provider</span>: WMI provider (CIMWin32)</li>
+                      <li><span class="strong">Result Code</span>: Result code at start (0x0)</li>
+                      <li><span class="strong">Host Process</span>: Name of the WMI execution process (wmiprvse.exe)</li>
+                      <li><span class="strong">Process ID</span>: ID of the WMI execution process</li>
+                      <li><span class="strong">Level</span>:  (0)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">2</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (source host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (source host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (5985)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (destination host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (destination host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (5985)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (destination host)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (System)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">3</td>
+                    <td class="border">Security</td>
+                    <td class="border">4672</td>
+                    <td class="border">Special Logon</td>
+                    <td class="border">Privileges assigned to a new logon.<ul>
+                      <li><span class="strong">Privileges</span>: Assigned special privileges (SeSecurityPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeTakeOwnershipPrivilege, SeDebugPrivilege, SeSystemEnvironmentPrivilege, SeLoadDriverPrivilege, SeImpersonatePrivilege, SeDelegateSessionUserImpersonatePrivilege)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4624</td>
+                    <td class="border">Logon</td>
+                    <td class="border">An account was successfully logged on.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">New Logon &gt; Logon ID/Logon GUID</span>: Session ID of the user who was logged on</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Logon Process</span>: Process used for logon (Kerberos)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number</li>
+                      <li><span class="strong">New Logon &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who was logged on</li>
+                      <li><span class="strong">Logon Type</span>: Logon path, method, etc. (3=Network)</li>
+                      <li><span class="strong">Network Information &gt; Workstation Name</span>: Name of the host that requested the logon</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Key Length</span>: Length of the key used for the authentication (0)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Authentication Package</span>: Authentication package used (Kerberos)</li>
+                      <li><span class="strong">Network Information &gt; Source Network Address</span>: IP address that requested the logon</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">4</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (Domain Controller IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\lsass.exe)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (Domain Controller host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (135)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (destination host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (destination host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (135)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (Domain Controller)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (destination host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">5</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (Domain Controller IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (Domain Controller host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (high port)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (destination host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (destination host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5158</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has permitted a bind to a local port.<ul>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Bind local port (high port)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (Domain Controller)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (\device\harddiskvolume2\windows\system32\lsass.exe)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (outbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (destination host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">6</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (Unknown)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: Service that manages the object (WS-Management Listener)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: File type (Unknown)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">7</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (source host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (source host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (5985)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (destination host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (destination host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (5985)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (destination host)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (System)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID (4)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">8</td>
+                    <td class="border">Security</td>
+                    <td class="border">4672</td>
+                    <td class="border">Special Logon</td>
+                    <td class="border">Privileges assigned to a new logon.<ul>
+                      <li><span class="strong">Privileges</span>: Assigned special privileges (SeSecurityPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeTakeOwnershipPrivilege, SeDebugPrivilege, SeSystemEnvironmentPrivilege, SeLoadDriverPrivilege, SeImpersonatePrivilege, SeDelegateSessionUserImpersonatePrivilege)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4624</td>
+                    <td class="border">Logon</td>
+                    <td class="border">An account was successfully logged on.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">New Logon &gt; Logon ID/Logon GUID</span>: Session ID of the user who was logged on</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Logon Process</span>: Process used for logon (Kerberos)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number</li>
+                      <li><span class="strong">New Logon &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who was logged on</li>
+                      <li><span class="strong">Logon Type</span>: Logon path, method, etc. (3=Network)</li>
+                      <li><span class="strong">Network Information &gt; Workstation Name</span>: Name of the host that requested the logon</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Key Length</span>: Length of the key used for the authentication (0)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Authentication Package</span>: Authentication package used (Kerberos)</li>
+                      <li><span class="strong">Network Information &gt; Source Network Address</span>: IP address that requested the logon</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">9</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (unknown unique access (bit 0), unknown unique access (bit 1), unknown unique access (bit 2)/-/0x7)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (Unknown)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: Service that manages the object (WS-Management Listener)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: File type (Unknown)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">10</td>
+                    <td class="border">Security</td>
+                    <td class="border">4634</td>
+                    <td class="border">Logoff</td>
+                    <td class="border">An account was logged off.<ul>
+                      <li><span class="strong">Logon Type</span>: Logon path, method, etc. (3=Network)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">11</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">12</td>
+                    <td class="border">Registry object added or deleted (rule: RegistryEvent)</td>
+                    <td class="border">Registry object added or deleted.<ul>
+                      <li><span class="strong">EventType</span>: Process type (CreateKey)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\system32\wbem\wmiprvse.exe)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">TargetObject</span>: Created/deleted registry key/value (\REGISTRY\MACHINE\SOFTWARE\Microsoft\Wbem)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">12</td>
+                    <td class="border">Microsoft-Windows-WMI-Activity/Operational</td>
+                    <td class="border">5857</td>
+                    <td class="border">WMI-Activity</td>
+                    <td class="border">[Provider] provider started with result code [Result Code]. Host Process = [Host Process]; Process ID = [Process ID]; Provider Path = [Provider Path]<ul>
+                      <li><span class="strong">Provider Path</span>: File of the provider (%systemroot%\system32\wbem\cimwin32.dll)</li>
+                      <li><span class="strong">Provider</span>: WMI provider (CIMWin32)</li>
+                      <li><span class="strong">Result Code</span>: Result code at start (0x0)</li>
+                      <li><span class="strong">Host Process</span>: Name of the WMI execution process (wmiprvse.exe)</li>
+                      <li><span class="strong">Process ID</span>: ID of the WMI execution process</li>
+                      <li><span class="strong">Level</span>:  (0)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-WMI-Activity/Operational</td>
+                    <td class="border">5857</td>
+                    <td class="border">WMI-Activity</td>
+                    <td class="border">[Provider] provider started with result code [Result Code]. Host Process = [Host Process]; Process ID = [Process ID]; Provider Path = [Provider Path]<ul>
+                      <li><span class="strong">Provider Path</span>: File of the provider (%SystemRoot%\system32\tscfgwmi.dll)</li>
+                      <li><span class="strong">Provider</span>: WMI provider (Win32_WIN32_TERMINALSERVICE_Prov)</li>
+                      <li><span class="strong">Result Code</span>: Result code at start (0x0)</li>
+                      <li><span class="strong">Host Process</span>: Name of the WMI execution process (wmiprvse.exe)</li>
+                      <li><span class="strong">Process ID</span>: ID of the WMI execution process</li>
+                      <li><span class="strong">Level</span>:  (0)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">13</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">3</td>
+                    <td class="border">Network connection detected (rule: NetworkConnect)</td>
+                    <td class="border">Network connection detected.<ul>
+                      <li><span class="strong">Protocol</span>: Protocol (tcp)</li>
+                      <li><span class="strong">DestinationIp</span>: Destination IP address (source host IP address)</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (System)</li>
+                      <li><span class="strong">DestinationHostname</span>: Destination host name (source host name)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID (4)</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\SYSTEM)</li>
+                      <li><span class="strong">DestinationPort</span>: Destination port number (high port)</li>
+                      <li><span class="strong">SourcePort</span>: Source port number (5985)</li>
+                      <li><span class="strong">SourceHostname</span>: Source host name (destination host name)</li>
+                      <li><span class="strong">SourceIp</span>: Source IP address (destination host IP address)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">5156</td>
+                    <td class="border">Filtering Platform Connection</td>
+                    <td class="border">The Windows Filtering Platform has allowed a connection.<ul>
+                      <li><span class="strong">Network Information &gt; Destination Port</span>: Destination port number (5985)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number (high port)</li>
+                      <li><span class="strong">Network Information &gt; Destination Address</span>: Destination IP address (destination host)</li>
+                      <li><span class="strong">Network Information &gt; Protocol</span>: Protocol used (6=TCP)</li>
+                      <li><span class="strong">Application Information &gt; Application Name</span>: Execution process (System)</li>
+                      <li><span class="strong">Network Information &gt; Direction</span>: Communication direction (inbound)</li>
+                      <li><span class="strong">Network Information &gt; Source Address</span>: Source IP address (source host)</li>
+                      <li><span class="strong">Application Information &gt; Process ID</span>: Process ID</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">14</td>
+                    <td class="border">Security</td>
+                    <td class="border">4672</td>
+                    <td class="border">Special Logon</td>
+                    <td class="border">Privileges assigned to a new logon.<ul>
+                      <li><span class="strong">Privileges</span>: Assigned special privileges (SeSecurityPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeTakeOwnershipPrivilege, SeDebugPrivilege, SeSystemEnvironmentPrivilege, SeLoadDriverPrivilege, SeImpersonatePrivilege, SeDelegateSessionUserImpersonatePrivilege)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4624</td>
+                    <td class="border">Logon</td>
+                    <td class="border">An account was successfully logged on.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">New Logon &gt; Logon ID/Logon GUID</span>: Session ID of the user who was logged on</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Logon Process</span>: Process used for logon (Kerberos)</li>
+                      <li><span class="strong">Network Information &gt; Source Port</span>: Source port number</li>
+                      <li><span class="strong">New Logon &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who was logged on</li>
+                      <li><span class="strong">Logon Type</span>: Logon path, method, etc.</li>
+                      <li><span class="strong">Network Information &gt; Workstation Name</span>: Name of the host that requested the logon</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Key Length</span>: Length of the key used for the authentication (0)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file</li>
+                      <li><span class="strong">Detailed Authentication Information &gt; Authentication Package</span>: Authentication package used (Kerberos)</li>
+                      <li><span class="strong">Network Information &gt; Source Network Address</span>: IP address that requested the logon</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">15</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (Unknown)</li>
+                      <li><span class="strong">Object &gt; Object Server</span>: Service that manages the object (WS-Management Listener)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: File type (Unknown)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="2">16</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">CurrentDirectory</span>: Work directory (C:\Windows\system32\)</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (C:\Windows\system32\wbem\wmiprvse.exe -secured -Embedding)</li>
+                      <li><span class="strong">IntegrityLevel</span>: Privilege level (System)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process (C:\Windows\system32\svchost.exe -k DcomLaunch)</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user (NT AUTHORITY\NETWORK SERVICE)</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\wbem\WmiPrvSE.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\wbem\WmiPrvSE.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">17</td>
+                    <td class="border">Security</td>
+                    <td class="border">4634</td>
+                    <td class="border">Logoff</td>
+                    <td class="border">An account was logged off.<ul>
+                      <li><span class="strong">Logon Type</span>: Logon path, method, etc. (3=Network)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the authentication</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="3">18</td>
+                    <td class="border">Security</td>
+                    <td class="border">4656</td>
+                    <td class="border">File System/Other Object Access Events</td>
+                    <td class="border">A handle to an object was requested.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\WMIPRVSE.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4663</td>
+                    <td class="border">File System</td>
+                    <td class="border">An attempt was made to access an object.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\WMIPRVSE.EXE-[RANDOM].pf)</li>
+                      <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4658</td>
+                    <td class="border">File System</td>
+                    <td class="border">The handle to an object was closed.<ul>
+                      <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\svchost.exe)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (handle obtained with Event ID 4656)</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#DestinationDetails-USNJournal" class="collapse" id="a-DestinationDetails-USNJournal" onclick="showhide('DestinationDetails-USNJournal');">-</a> <a name="DestinationDetails-USNJournal">USN Journal</a></h3>
+            <div class="section" id="div-DestinationDetails-USNJournal">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">File Name</th>
+                    <th class="border_header">Process</th>
+                    <th class="border_header">Attribute</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="3">1</td>
+                    <td class="border">WMIPRVSE.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">WMIPRVSE.EXE-[RANDOM].pf</td>
+                    <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">WMIPRVSE.EXE-[RANDOM].pf</td>
+                    <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+                    <td class="border">archive+not_indexed</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#DestinationDetails-MFT" class="collapse" id="a-DestinationDetails-MFT" onclick="showhide('DestinationDetails-MFT');">-</a> <a name="DestinationDetails-MFT">MFT</a></h3>
+            <div class="section" id="div-DestinationDetails-MFT">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Header Flag</th>
+                    <th class="border_header">Validity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">[Drive Name]:\Windows\Prefetch\WMIPRVSE.EXE-[RANDOM].pf</td>
+                    <td class="border">FILE</td>
+                    <td class="border">ALLOCATED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#DestinationDetails-Prefetch" class="collapse" id="a-DestinationDetails-Prefetch" onclick="showhide('DestinationDetails-Prefetch');">-</a> <a name="DestinationDetails-Prefetch">Prefetch</a></h3>
+            <div class="section" id="div-DestinationDetails-Prefetch">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Prefetch File</th>
+                    <th class="border_header">Process Name</th>
+                    <th class="border_header">Process Path</th>
+                    <th class="border_header">Information That Can Be Confirmed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="1">1</td>
+                    <td class="border">C:\Windows\Prefetch\WMIPRVSE.EXE-[RANDOM].pf</td>
+                    <td class="border">WMIPRVSE.EXE</td>
+                    <td class="border">C:\WINDOWS\SYSTEM32\WBEM\WMIPRVSE.EXE</td>
+                    <td class="border">Last Run Time (last execution date and time)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <h3 class="subsection"><a href="#DestinationDetails-Registry" class="collapse" id="a-DestinationDetails-Registry" onclick="showhide('DestinationDetails-Registry');">-</a> <a name="DestinationDetails-Registry">Registry Entry</a></h3>
+            <div class="section" id="div-DestinationDetails-Registry">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Path</th>
+                    <th class="border_header">Type</th>
+                    <th class="border_header">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="2">1</td>
+                    <td class="border">HKEY_USERS\[User SID]\Software\Classes\Local Settings\MuiCache\1\826182D0\@%Systemroot%\system32\wsmsvc.dll,-102</td>
+                    <td class="border">String</td>
+                    <td class="border">The Windows Remote Management (WinRM) service has the WS-Management protocol for remote management implemented in it. WS-Management is a standard web service protocol used for the management of remote software and hardware. The WinRM service listens to and processes WS-Management requests on the network. In order for the WinRM service to be able to listen to the network, it is necessary to configure listeners for the WinRM service by using the winrm.cmd command line tool or via a group policy. Using this service allows access to WMI data and collect events. Before collecting events or executing a subscription to events, it must be ensured that the WinRM service is running. WinRM messages use HTTP and HTTPS as the transport. Although the WinRM service is not dependent on IIS, settings have been configured in advance so that the service shares one port with IIS on the same computer. For this service,  &quot;/wsman&quot; is reserved as the URL prefix. In order to prevent a conflict with IIS, it is necessary to confirm that &quot;/wsman&quot; is not used in any websites on IIS as a URL prefix.</td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">HKEY_USERS\[User SID]_Classes\Local Settings\MuiCache\1\826182D0\@%Systemroot%\system32\wsmsvc.dll,-102</td>
+                    <td class="border">String</td>
+                    <td class="border">The Windows Remote Management (WinRM) service has the WS-Management protocol for remote management implemented in it. WS-Management is a standard web service protocol used for the management of remote software and hardware. The WinRM service listens to and processes WS-Management requests on the network. In order for the WinRM service to be able to listen to the network, it is necessary to configure listeners for the WinRM service by using the winrm.cmd command line tool or via a group policy. Using this service allows access to WMI data and collect events. Before collecting events or executing a subscription to events, it must be ensured that the WinRM service is running. WinRM messages use HTTP and HTTPS as the transport. Although the WinRM service is not dependent on IIS, settings have been configured in advance so that the service shares one port with IIS on the same computer. For this service,  &quot;/wsman&quot; is reserved as the URL prefix. In order to prevent a conflict with IIS, it is necessary to confirm that &quot;/wsman&quot; is not used in any websites on IIS as a URL prefix.</td>
+                  </tr>
+                  <tr class="border">
+                    <td class="border" rowspan="1">2</td>
+                    <td class="border">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Reliability Analysis\RAC\WmiLastTime</td>
+                    <td class="border">String</td>
+                    <td class="border">(RANDOM)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#Notes" class="collapse" id="a-Notes" onclick="showhide('Notes');">-</a> <a name="Notes">Remarks</a></h2>
+        <div class="section" id="div-Notes">
+          <ul>
+            <li>Communication by WinRM is performed via 5985/tcp with &quot;Microsoft WinRM Client&quot; serving as User-Agent.</li>
+          </ul>
+        </div>
+  </body>
+</html>

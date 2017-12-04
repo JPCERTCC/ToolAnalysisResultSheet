@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Out-Minidump (PowerSploit)</title>
+    <link rel="stylesheet" type="text/css" href="common/style.css" />
+    <script language="JavaScript" type="text/javascript" src="common/script.js"></script>
+  </head>
+  <body>
+    <h1 class="title">Out-Minidump (PowerSploit)</h1>
+      <h2 class="toc"><a href="#toc" class="collapse" id="a-toc" onclick="showhide('toc');">-</a> <a name="toc">Table of Contents</a></h2>
+        <div class="toc" id="div-toc">
+          <ul>
+            <li><a href="#Summary">Tool Overview</a></li>
+            <li><a href="#ExecCondition">Tool Operation Overview</a></li>
+            <li><a href="#Findings">Information Acquired from Log</a></li>
+            <li><a href="#SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></li>
+            <li><a href="#KeyEvents">Main Information Recorded at Execution</a></li>
+            <li><a href="#HostDetails">Details: Host</a></li>
+          </ul>
+          <p class="toc_command"><a href="#" onclick="collapseall('s');">Open all sections</a> | <a href="#" onclick="collapseall('h');">Close all sections</a></p>
+          <hr class="section_divider" />
+        </div>
+      <h2 class="section"><a href="#Summary" class="collapse" id="a-Summary" onclick="showhide('Summary');">-</a> <a name="Summary">Tool Overview</a></h2>
+        <div class="section" id="div-Summary">
+          <dl class="table">
+            <dt class="table">Category</dt>
+              <dd class="table">Password and Hash Dump</dd>
+            <dt class="table">Description</dt>
+              <dd class="table">Dumps a process into memory.</dd>
+            <dt class="table">Example of Presumed Tool Use During an Attack</dt>
+              <dd class="table">This tool is used to acquire the user&apos;s password and use it for unauthorized login.</dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#ExecCondition" class="collapse" id="a-ExecCondition" onclick="showhide('ExecCondition');">-</a> <a name="ExecCondition">Tool Operation Overview</a></h2>
+        <div class="section" id="div-ExecCondition">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border_header">Item</th>
+                <th class="border_header">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="border_header">OS</td>
+                <td class="border">Windows</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Belonging to Domain</td>
+                <td class="border">Not required</td>
+              </tr>
+              <tr class="border">
+                <td class="border_header">Rights</td>
+                <td class="border">Administrator</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <h2 class="section"><a href="#Findings" class="collapse" id="a-Findings" onclick="showhide('Findings');">-</a> <a name="Findings">Information Acquired from Log</a></h2>
+        <div class="section" id="div-Findings">
+          <dl class="table">
+            <dt class="table">Standard Settings</dt>
+              <dd class="table"><ul>
+                <li>Host<ul>
+                  <li>Execution history (Prefetch)</li>
+                  <li>Details of the script/command executed (Windows 10 only. They are recorded in &quot;Microsoft-Windows-PowerShell/Operational&quot; and C:\Users\[User Name]\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt)</li>
+                  </ul></li>
+                </ul></dd>
+            <dt class="table">Additional Settings</dt>
+              <dd class="table"><ul>
+                <li>Host<ul>
+                  <li>Execution history (audit policy, Sysmon)</li>
+                  <li>The fact that &quot;reading from process memory&quot; occurred (audit policy)</li>
+                  <li>The fact that an lsass dump file was created (audit policy, MFT, and USN journal)</li>
+                  <li>Details of the script/command executed (when Windows Management Framework 5.0 is installed on Windows 7. They are recorded in &quot;Microsoft-Windows-PowerShell/Operational&quot; and C:\Users\[User Name]\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt)</li>
+                  </ul></li>
+                </ul></dd>
+          </dl>
+        </div>
+      <h2 class="section"><a href="#SuccessCondition" class="collapse" id="a-SuccessCondition" onclick="showhide('SuccessCondition');">-</a> <a name="SuccessCondition">Evidence That Can Be Confirmed When Execution is Successful</a></h2>
+        <div class="section" id="div-SuccessCondition">
+          <ul>
+            <li>An lsass dump file (lsass_[lsass PID].dmp) was created.</li>
+          </ul>
+        </div>
+      <h2 class="section"><a href="#KeyEvents" class="collapse" id="a-KeyEvents" onclick="showhide('KeyEvents');">-</a> <a name="KeyEvents">Main Information Recorded at Execution</a></h2>
+        <div class="section" id="div-KeyEvents">
+          <h3 class="subsection"><a href="#KeyEvents-Host" class="collapse" id="a-KeyEvents-Host" onclick="showhide('KeyEvents-Host');">-</a> <a name="KeyEvents-Host">Host</a></h3>
+            <div class="section" id="div-KeyEvents-Host">
+              <h4>Event log</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Log</th>
+                      <th class="border_header">Event ID</th>
+                      <th class="border_header">Task Category</th>
+                      <th class="border_header">Event Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">1</td>
+                      <td class="border">Process Create (rule: ProcessCreate)</td>
+                      <td class="border">Process Create.<ul>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                        <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">CommandLine</span>: Command line of the execution command (normally, only the path to powershell.exe. However, when the script was specified with an argument, that argument may be left in the command line)</li>
+                        <li><span class="strong">User</span>: Execute as user</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">Security</td>
+                      <td class="border">4663</td>
+                      <td class="border">File System</td>
+                      <td class="border">An attempt was made to access an object.<ul>
+                        <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (reading from process memory)</li>
+                        <li><span class="strong">Object &gt; Object Type</span>: Target category (Process)</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                        <li><span class="strong">Object &gt; Object Name</span>: Target file name (\Device\HarddiskVolume2\Windows\System32\lsass.exe)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                      <td class="border">11</td>
+                      <td class="border">File created (rule: FileCreate)</td>
+                      <td class="border">File created.<ul>
+                        <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                        <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                        <li><span class="strong">TargetFilename</span>: Created file ([Path to PowerSploit]\lsass_[lsass PID].dmp)</li>
+                        <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                        </ul></td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">Security</td>
+                      <td class="border">4689</td>
+                      <td class="border">Process Termination</td>
+                      <td class="border">A process has exited.<ul>
+                        <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                        <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value</li>
+                        <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                        <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                        </ul></td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>USN journal</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">File Name</th>
+                      <th class="border_header">Process</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">lsass_[lsass PID].dmp</td>
+                      <td class="border">FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">3</td>
+                      <td class="border">lsass_[lsass PID].dmp</td>
+                      <td class="border">DATA_EXTEND+DATA_OVERWRITE+FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">2</td>
+                      <td class="border">lsass_[lsass PID].dmp</td>
+                      <td class="border">DATA_EXTEND+FILE_CREATE</td>
+                    </tr>
+                    <tr class="border">
+                      <td class="border">4</td>
+                      <td class="border">lsass_[lsass PID].dmp</td>
+                      <td class="border">CLOSE+DATA_EXTEND+DATA_OVERWRITE+FILE_CREATE</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>UserAssist</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Registry</th>
+                      <th class="border_header">Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">\REGISTRY\USER\[User SID]\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{[GUID]}\Count\{[GUID]}\JvaqbjfCbjreFuryy\i1.0\cbjrefuryy.rkr</td>
+                      <td class="border">Date and time of the initial execution, Total number of executions</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>MFT</h4>
+                <table class="border">
+                  <thead>
+                    <tr class="border">
+                      <th class="border_header">#</th>
+                      <th class="border_header">Path</th>
+                      <th class="border_header">Header Flag</th>
+                      <th class="border_header">Validity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <td class="border">1</td>
+                      <td class="border">[Path to PowerSploit]\lsass_[lsass PID].dmp</td>
+                      <td class="border">FILE</td>
+                      <td class="border">ALLOCATED</td>
+                    </tr>
+                  </tbody>
+                </table>
+              <h4>Prefetch</h4>
+                <ul>
+                  <li>C:\Windows\Prefetch\POWERSHELL.EXE-[RANDOM].pf</li>
+                </ul>
+            </div>
+        </div>
+        <hr class="section_divider">
+      <h2 class="section"><a href="#HostDetails" class="collapse" id="a-HostDetails" onclick="showhide('HostDetails');">-</a> <a name="HostDetails">Details: Host</a></h2>
+        <div class="section" id="div-HostDetails">
+          <h3 class="subsection"><a href="#HostDetails-EventLogs" class="collapse" id="a-HostDetails-EventLogs" onclick="showhide('HostDetails-EventLogs');">-</a> <a name="HostDetails-EventLogs">Event Log</a></h3>
+            <div class="section" id="div-HostDetails-EventLogs">
+              <table class="border">
+                <thead>
+                  <tr class="border">
+                    <th class="border_header">#</th>
+                    <th class="border_header">Event log</th>
+                    <th class="border_header">Event ID</th>
+                    <th class="border_header">Task Category</th>
+                    <th class="border_header">Event Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border">
+                    <td class="border" rowspan="5">1</td>
+                    <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                    <td class="border">1</td>
+                    <td class="border">Process Create (rule: ProcessCreate)</td>
+                    <td class="border">Process Create.<ul>
+                      <li><span class="strong">LogonGuid/LogonId</span>: ID of the logon session</li>
+                      <li><span class="strong">ParentProcessGuid/ParentProcessId</span>: Process ID of the parent process</li>
+                      <li><span class="strong">ParentImage</span>: Executable file of the parent process</li>
+                      <li><span class="strong">CommandLine</span>: Command line of the execution command (normally, only the path to powershell.exe. However, when the script was specified with an argument, that argument may be left in the command line)</li>
+                      <li><span class="strong">ParentCommandLine</span>: Command line of the parent process</li>
+                      <li><span class="strong">UtcTime</span>: Process execution date and time (UTC)</li>
+                      <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                      <li><span class="strong">User</span>: Execute as user</li>
+                      <li><span class="strong">Hashes</span>: Hash value of the executable file</li>
+                      <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Security</td>
+                    <td class="border">4688</td>
+                    <td class="border">Process Create</td>
+                    <td class="border">A new process has been created.<ul>
+                      <li><span class="strong">Process Information &gt; Required Label</span>: Necessity of privilege escalation (Mandatory Label\High Mandatory Level)</li>
+                      <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                      <li><span class="strong">Process Information &gt; Source Process Name</span>: Path to the parent process that created the new process (C:\Windows\explorer.exe)</li>
+                      <li><span class="strong">Log Date and Time</span>: Process execution date and time (local time)</li>
+                      <li><span class="strong">Process Information &gt; New Process Name</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                      <li><span class="strong">Process Information &gt; Token Escalation Type</span>: Presence of privilege escalation (1)</li>
+                      <li><span class="strong">Process Information &gt; New Process ID</span>: Process ID (hexadecimal)</li>
+                      <li><span class="strong">Process Information &gt; Source Process ID</span>: Process ID of the parent process that created the new process. &quot;Creator Process ID&quot; in Windows 7</li>
+                      <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                      </ul></td>
+                  </tr>
+                  <tr class="border">
+                    <!-- rowspan -->
+                    <td class="border">Microsoft-Windows-PowerShell/Operational</td>
+                    <td class="border">40961</td>
+                    <td class="border">PowerShell Console Startup</td>
+                    <td class="border">The PowerShell console is starting up.</td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Microsoft-Windows-PowerShell/Operational</td>
+                  <td class="border">53504</td>
+                  <td class="border">PowerShell Named Pipe IPC</td>
+                  <td class="border">Windows PowerShell has started an IPC listening thread on process [Process ID] of the [Domain].</td>
+              </tr>
+              <tr class="border">
+                <!-- rowspan -->
+                <td class="border">Microsoft-Windows-PowerShell/Operational</td>
+                <td class="border">40962</td>
+                <td class="border">PowerShell Console Startup</td>
+                <td class="border">PowerShell console is ready for user input</td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="1">2</td>
+              <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+              <td class="border">13</td>
+              <td class="border">Registry value set (rule: RegistryEvent)</td>
+              <td class="border">Registry value set.<ul>
+                <li><span class="strong">EventType</span>: Process type (SetValue)</li>
+                <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\Explorer.EXE)</li>
+                <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                <li><span class="strong">Details</span>: Setting value written to the registry (Binary Data)</li>
+                <li><span class="strong">TargetObject</span>: Registry value at the write destination (\REGISTRY\USER\[User SID]\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{[GUID]}\Count\{[GUID]}\JvaqbjfCbjreFuryy\i1.0\cbjrefuryy.rkr)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="1">3</td>
+              <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+              <td class="border">10</td>
+              <td class="border">Process accessed (rule: ProcessAccess)</td>
+              <td class="border">Process accessed.<ul>
+                <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">GrantedAccess</span>: Details of the granted access</li>
+                <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                <li><span class="strong">SourceImage</span>: Path to the access source process (C:\Windows\Explorer.EXE)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="1">4</td>
+              <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+              <td class="border">10</td>
+              <td class="border">Process accessed (rule: ProcessAccess)</td>
+              <td class="border">Process accessed.<ul>
+                <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">GrantedAccess</span>: Details of the granted access</li>
+                <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                <li><span class="strong">SourceImage</span>: Path to the access source process (C:\Windows\system32\lsass.exe)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="4">5</td>
+              <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+              <td class="border">11</td>
+              <td class="border">File created (rule: FileCreate)</td>
+              <td class="border">File created.<ul>
+                <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                <li><span class="strong">TargetFilename</span>: Created file (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].ps1)</li>
+                <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4656</td>
+              <td class="border">File System/Other Object Access Events</td>
+              <td class="border">A handle to an object was requested.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].ps1)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4663</td>
+              <td class="border">File System</td>
+              <td class="border">An attempt was made to access an object.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteAttributes)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].ps1)</li>
+                <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4658</td>
+              <td class="border">File System</td>
+              <td class="border">The handle to an object was closed.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="4">6</td>
+              <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+              <td class="border">11</td>
+              <td class="border">File created (rule: FileCreate)</td>
+              <td class="border">File created.<ul>
+                <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                <li><span class="strong">TargetFilename</span>: Created file (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].psm1)</li>
+                <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4656</td>
+              <td class="border">File System/Other Object Access Events</td>
+              <td class="border">A handle to an object was requested.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and WriteAttributes)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].psm1)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4663</td>
+              <td class="border">File System</td>
+              <td class="border">An attempt was made to access an object.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].psm1)</li>
+                <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4658</td>
+              <td class="border">File System</td>
+              <td class="border">The handle to an object was closed.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="3">7</td>
+              <td class="border">Security</td>
+              <td class="border">4656</td>
+              <td class="border">File System/Other Object Access Events</td>
+              <td class="border">A handle to an object was requested.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (including DELETE)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].ps1)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4663</td>
+              <td class="border">File System</td>
+              <td class="border">An attempt was made to access an object.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (DELETE)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].ps1)</li>
+                <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4658</td>
+              <td class="border">File System</td>
+              <td class="border">The handle to an object was closed.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="3">8</td>
+              <td class="border">Security</td>
+              <td class="border">4656</td>
+              <td class="border">File System/Other Object Access Events</td>
+              <td class="border">A handle to an object was requested.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (including DELETE)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].psm1)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4663</td>
+              <td class="border">File System</td>
+              <td class="border">An attempt was made to access an object.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (DELETE)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Local\Temp\[RANDOM].psm1)</li>
+                <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege</li>
+                <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4658</td>
+              <td class="border">File System</td>
+              <td class="border">The handle to an object was closed.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <td class="border" rowspan="3">9</td>
+              <td class="border">Security</td>
+              <td class="border">4656</td>
+              <td class="border">File System/Other Object Access Events</td>
+              <td class="border">A handle to an object was requested.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\POWERSHELL.EXE-[RANDOM].pf)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4663</td>
+              <td class="border">File System</td>
+              <td class="border">An attempt was made to access an object.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Windows\Prefetch\POWERSHELL.EXE-[RANDOM].pf)</li>
+                <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege</li>
+                <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\svchost.exe)</li>
+                <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                </ul></td>
+            </tr>
+            <tr class="border">
+              <!-- rowspan -->
+              <td class="border">Security</td>
+              <td class="border">4658</td>
+              <td class="border">File System</td>
+              <td class="border">The handle to an object was closed.<ul>
+                <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\svchost.exe)</li>
+                <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                </ul></td>
+            </tr>
+                <tr class="border">
+                  <td class="border" rowspan="3">10</td>
+                  <td class="border">Security</td>
+                  <td class="border">4656</td>
+                  <td class="border">File System/Other Object Access Events</td>
+                  <td class="border">A handle to an object was requested.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_History.txt)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4663</td>
+                  <td class="border">File System</td>
+                  <td class="border">An attempt was made to access an object.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (WriteData or AddFile, AppendData)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Object &gt; Object Name</span>: Target file name (C:\Users\[User Name]\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_History.txt)</li>
+                    <li><span class="strong">Access Request Information &gt; Access</span>: Requested privilege</li>
+                    <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4658</td>
+                  <td class="border">File System</td>
+                  <td class="border">The handle to an object was closed.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <td class="border" rowspan="1">11</td>
+                  <td class="border">Microsoft-Windows-PowerShell/Operational</td>
+                  <td class="border">4104</td>
+                  <td class="border">Execute a Remote Command.</td>
+                  <td class="border">Creating Scriptblock text.</td>
+                </tr>
+                <tr class="border">
+                  <td class="border" rowspan="6">12</td>
+                  <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                  <td class="border">10</td>
+                  <td class="border">Process accessed (rule: ProcessAccess)</td>
+                  <td class="border">Process accessed.<ul>
+                    <li><span class="strong">SourceProcessGUID/SourceProcessId/SourceThreadId</span>: Process of the access source process/Thread ID</li>
+                    <li><span class="strong">TargetImage</span>: Path to the access destination process (C:\Windows\system32\lsass.exe)</li>
+                    <li><span class="strong">TargetProcessGUID/TargetProcessId</span>: Process ID of the access destination process</li>
+                    <li><span class="strong">SourceImage</span>: Path to the access source process (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">GrantedAccess</span>: Details of the granted access (0x1F3FFF, 0x1FFFFF)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4690</td>
+                  <td class="border">Handle Manipulation</td>
+                  <td class="border">An attempt was made to duplicate a handle to an object.<ul>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">New Handle Information &gt; Destination Handle ID</span>: New handle ID at the copy destination</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Source Handle Information &gt; Source Process ID</span>: Process ID at the copy source (Process ID of PowerShell)</li>
+                    <li><span class="strong">New Handle Information &gt; Destination Process ID</span>: Process ID at the copy destination that has a new handle ID (Process ID of 0x4=System)</li>
+                    <li><span class="strong">Source Handle Information &gt; Source Handle ID</span>: Handle ID at the copy source</li>
+                    </ul>
+                    <span class="strong">Remarks</span>: A handle is copied from PowerShell to System (PID 0x4).</td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4658</td>
+                  <td class="border">Kernel Object</td>
+                  <td class="border">The handle to an object was closed.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID copied to System in the immediately prior Event ID: 4690)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4656</td>
+                  <td class="border">Kernel Object</td>
+                  <td class="border">A handle to an object was requested.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including reading from the process memory)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Object &gt; Object Name</span>: Target file name (\Device\HarddiskVolume2\Windows\System32\lsass.exe)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Object &gt; Object Type</span>: File type (Process)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4690</td>
+                  <td class="border">Handle Manipulation</td>
+                  <td class="border">An attempt was made to duplicate a handle to an object.<ul>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">New Handle Information &gt; Destination Handle ID</span>: New handle ID at the copy destination</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Source Handle Information &gt; Source Process ID</span>: Process ID at the copy source (Process ID of PowerShell)</li>
+                    <li><span class="strong">New Handle Information &gt; Destination Process ID</span>: Process ID at the copy destination that has a new handle ID (Process ID of 0x4=System)</li>
+                    <li><span class="strong">Source Handle Information &gt; Source Handle ID</span>: Handle ID at the copy source</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4658</td>
+                  <td class="border">Kernel Object</td>
+                  <td class="border">The handle to an object was closed.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID copied to System in the immediately prior Event ID: 4690)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <td class="border" rowspan="7">13</td>
+                  <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                  <td class="border">11</td>
+                  <td class="border">File created (rule: FileCreate)</td>
+                  <td class="border">File created.<ul>
+                    <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                    <li><span class="strong">TargetFilename</span>: Created file ([Path to PowerSploit]\lsass_[lsass PID].dmp)</li>
+                    <li><span class="strong">CreationUtcTime</span>: File creation date and time (UTC)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4656</td>
+                  <td class="border">File System/Other Object Access Events</td>
+                  <td class="border">A handle to an object was requested.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Path to PowerSploit]\lsass_[lsass PID].dmp)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Object &gt; Object Type</span>: Type of the file (File)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4656</td>
+                  <td class="border">Kernel Object</td>
+                  <td class="border">A handle to an object was requested.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including reading from the process memory)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Object &gt; Object Name</span>: Target file name (\Device\HarddiskVolume2\Windows\System32\lsass.exe)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Object &gt; Object Type</span>: File type (Process)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4663</td>
+                  <td class="border">File System</td>
+                  <td class="border">An attempt was made to access an object.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privilege (reading from process memory)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Object &gt; Object Name</span>: Target file name (\Device\HarddiskVolume2\Windows\System32\lsass.exe)</li>
+                    <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Object &gt; Object Type</span>: Target category (Process)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4658</td>
+                  <td class="border">Kernel Object</td>
+                  <td class="border">The handle to an object was closed.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle (Handle ID obtained with immediately prior Event ID 4656)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4663</td>
+                  <td class="border">File System</td>
+                  <td class="border">An attempt was made to access an object.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Access Request Information &gt; Access/Reason for Access/Access Mask</span>: Requested privileges (including WriteData or AddFile, and AppendData)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Object &gt; Object Name</span>: Target file name ([Path to PowerSploit]\lsass_[lsass PID].dmp)</li>
+                    <li><span class="strong">Audit Success</span>: Success or failure (access successful)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that closed the handle (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Object &gt; Object Type</span>: Category of the target (File)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the applicable handle (Handle ID acquired in the Event ID: 4656 for lsass_[lsass PID].dmp)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4658</td>
+                  <td class="border">File System</td>
+                  <td class="border">The handle to an object was closed.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Name of the process that requested the object (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    <li><span class="strong">Object &gt; Handle ID</span>: ID of the relevant handle</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <td class="border" rowspan="2">14</td>
+                  <td class="border">Microsoft-Windows-Sysmon/Operational</td>
+                  <td class="border">5</td>
+                  <td class="border">Process terminated (rule: ProcessTerminate)</td>
+                  <td class="border">Process terminated.<ul>
+                    <li><span class="strong">UtcTime</span>: Process terminated date and time (UTC)</li>
+                    <li><span class="strong">ProcessGuid/ProcessId</span>: Process ID</li>
+                    <li><span class="strong">Image</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    </ul></td>
+                </tr>
+                <tr class="border">
+                  <!-- rowspan -->
+                  <td class="border">Security</td>
+                  <td class="border">4689</td>
+                  <td class="border">Process Termination</td>
+                  <td class="border">A process has exited.<ul>
+                    <li><span class="strong">Process Information &gt; Process ID</span>: Process ID (hexadecimal)</li>
+                    <li><span class="strong">Subject &gt; Security ID/Account Name/Account Domain</span>: SID/Account name/Domain of the user who executed the tool</li>
+                    <li><span class="strong">Process Information &gt; Exit Status</span>: Process return value</li>
+                    <li><span class="strong">Log Date and Time</span>: Process terminated date and time (local time)</li>
+                    <li><span class="strong">Process Information &gt; Process Name</span>: Path to the executable file (C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe)</li>
+                    <li><span class="strong">Subject &gt; Logon ID</span>: Session ID of the user who executed the process</li>
+                    </ul></td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+  <h3 class="subsection"><a href="#HostDetails-USNJournal" class="collapse" id="a-HostDetails-USNJournal" onclick="showhide('HostDetails-USNJournal');">-</a> <a name="HostDetails-USNJournal">USN Journal</a></h3>
+    <div class="section" id="div-HostDetails-USNJournal">
+      <table class="border">
+        <thead>
+          <tr class="border">
+            <th class="border_header">#</th>
+            <th class="border_header">File Name</th>
+            <th class="border_header">Process</th>
+            <th class="border_header">Attribute</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border">
+            <td class="border" rowspan="8">1</td>
+            <td class="border">[RANDOM].ps1</td>
+            <td class="border">FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">[RANDOM].ps1</td>
+            <td class="border">DATA_EXTEND+FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">[RANDOM].ps1</td>
+            <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">[RANDOM].psm1</td>
+            <td class="border">FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">[RANDOM].psm1</td>
+            <td class="border">DATA_EXTEND+FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">[RANDOM].psm1</td>
+            <td class="border">CLOSE+DATA_EXTEND+FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">[RANDOM].ps1</td>
+            <td class="border">CLOSE+FILE_DELETE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">[RANDOM].psm1</td>
+            <td class="border">CLOSE+FILE_DELETE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <td class="border" rowspan="2">2</td>
+            <td class="border">ConsoleHost_history.txt</td>
+            <td class="border">DATA_EXTEND</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">ConsoleHost_history.txt</td>
+            <td class="border">CLOSE+DATA_EXTEND</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <td class="border" rowspan="4">3</td>
+            <td class="border">lsass_[lsass PID].dmp</td>
+            <td class="border">FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">lsass_[lsass PID].dmp</td>
+            <td class="border">DATA_EXTEND+FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">lsass_[lsass PID].dmp</td>
+            <td class="border">DATA_EXTEND+DATA_OVERWRITE+FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+          <tr class="border">
+            <!-- rowspan -->
+            <td class="border">lsass_[lsass PID].dmp</td>
+            <td class="border">CLOSE+DATA_EXTEND+DATA_OVERWRITE+FILE_CREATE</td>
+            <td class="border">archive</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <h3 class="subsection"><a href="#HostDetails-UserAssist" class="collapse" id="a-HostDetails-UserAssist" onclick="showhide('HostDetails-UserAssist');">-</a> <a name="HostDetails-UserAssist">UserAssist</a></h3>
+    <div class="section" id="div-HostDetails-UserAssist">
+      <table class="border">
+        <thead>
+          <tr class="border">
+            <th class="border_header">#</th>
+            <th class="border_header">Registry entry</th>
+            <th class="border_header">Information That Can Be Confirmed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border">
+            <td class="border" rowspan="1">1</td>
+            <td class="border">\REGISTRY\USER\[User SID]\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{[GUID]}\Count\{[GUID]}\JvaqbjfCbjreFuryy\i1.0\cbjrefuryy.rkr</td>
+            <td class="border">Date and time of the initial execution, Total number of executions</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <h3 class="subsection"><a href="#HostDetails-MFT" class="collapse" id="a-HostDetails-MFT" onclick="showhide('HostDetails-MFT');">-</a> <a name="HostDetails-MFT">MFT</a></h3>
+    <div class="section" id="div-HostDetails-MFT">
+      <table class="border">
+        <thead>
+          <tr class="border">
+            <th class="border_header">#</th>
+            <th class="border_header">Path</th>
+            <th class="border_header">Header Flag</th>
+            <th class="border_header">Validity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border">
+            <td class="border" rowspan="1">1</td>
+            <td class="border">[Path to PowerSploit]\lsass_[lsass PID].dmp</td>
+            <td class="border">FILE</td>
+            <td class="border">ALLOCATED</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <h3 class="subsection"><a href="#HostDetails-Prefetch" class="collapse" id="a-HostDetails-Prefetch" onclick="showhide('HostDetails-Prefetch');">-</a> <a name="HostDetails-Prefetch">Prefetch</a></h3>
+    <div class="section" id="div-HostDetails-Prefetch">
+      <table class="border">
+        <thead>
+          <tr class="border">
+            <th class="border_header">#</th>
+            <th class="border_header">Prefetch File</th>
+            <th class="border_header">Process Name</th>
+            <th class="border_header">Process Path</th>
+            <th class="border_header">Information That Can Be Confirmed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border">
+            <td class="border" rowspan="1">1</td>
+            <td class="border">POWERSHELL.EXE-[RANDOM].pf</td>
+            <td class="border">POWERSHELL.EXE</td>
+            <td class="border">\VOLUME{[GUID]}\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</td>
+            <td class="border">Last Run Time (last execution date and time)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Tool Analysis Result Sheet</title>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/dashboard.css" rel="stylesheet">
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+    <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">Tool Analysis Result Sheet</a>
+    <div class="collapse navbar-collapse" id="navbarsDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" href="http://www.jpcert.or.jp/english/pub/sr/ir_research.html" target="_blank">Report</a></li>
+        <li class="nav-item"><a class="nav-link" href="tool-list.html" target="mainframe">Tool List</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/JPCERTCC/ToolAnalysisResultSheet" target="_blank">Download</a></li>
+      </ul>
+      <form class="form-inline mt-2 mt-md-0" method="get" action="https://www.google.com/search" target="_blank">
+        <input class="form-control mr-sm-2" name="q" type="text" placeholder="Search">
+        <input type="hidden" name="hl" value="ja">
+        <input type="hidden" name="sitesearch" value="jpcertcc.github.io/ToolAnalysisResultSheet/">
+        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">
+      </form>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="overview.html" target="mainframe">About this site</a>
+          </li>
+        </ul>
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Command Execution</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/PsExec.htm" target="mainframe">PsExec</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/wmic.htm" target="mainframe">wmic</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/schtasks.htm" target="mainframe">schtasks</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/wmiexec-vbs.htm" target="mainframe">wmiexec.vbs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/BeginX.htm" target="mainframe">BeginX</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/WinRM.htm" target="mainframe">WinRM</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/WinRS.htm" target="mainframe">WinRS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/BITS.htm" target="mainframe">BITS</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Password and Hash Dump</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/PwDump7.htm" target="mainframe">PWDump7</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/PWDumpX.htm" target="mainframe">PWDumpX</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/QuarksPWDump.htm" target="mainframe">Quarks PwDump</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/Mimikatz_lsadump-sam.htm" target="mainframe">Mimikatz (Password and Hash Dump lsadump::sam)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/Mimikatz_sekurlsa-logonpasswords.htm" target="mainframe">Mimikatz (Password and Hash Dump sekurlsa::logonpasswords)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/Mimikatz_sekurlsa-tickets.htm" target="mainframe">Mimikatz (Ticket Acquisition sekurlsa::tickets)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/WCE.htm" target="mainframe">WCE</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/gsecdump.htm" target="mainframe">gsecdump</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/lslsass.htm" target="mainframe">lslsass</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/AceHash.htm" target="mainframe">AceHash</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/Find-GPOPasswords.htm" target="mainframe">Find-GPOPasswords.ps1</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/PowerSploit_GetGPPPassword.htm" target="mainframe">Get-GPPPassword</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/PowerSploit_Invoke-Mimikatz.htm" target="mainframe">Invoke-Mimikatz</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/PowerSploit_Out-Minidump.htm" target="mainframe">Out-Minidump</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/PowerMemory.htm" target="mainframe">PowerMemory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/WebBrowserPassView.htm" target="mainframe">WebBrowserPassView</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Malicious Communication Relay</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/Htran.htm" target="mainframe">Htran</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/FakeWpad.htm" target="mainframe">Fake wpad</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Remote Login</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/mstsc.htm" target="mainframe">RDP</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Pass-the-hash<br>Pass-the-ticket</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/RemoteLogin-WCE.htm" target="mainframe">WCE (Remote Login)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/RemoteLogin-Mimikatz.htm" target="mainframe">Mimikatz (Remote Login)</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Escalation to SYSTEM Privilege</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/MS14-058.htm" target="mainframe">MS14-058 Exploit</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/MS15-078.htm" target="mainframe">MS15-078 Exploit</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/SDB-UAC-Bypass.htm" target="mainframe">SDB UAC Bypass</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Capturing Domain Administrator Rights Account</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/MS14-068.htm" target="mainframe">MS14-068 Exploit</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/Mimikatz_GoldenTicket.htm" target="mainframe">Golden Ticket (Mimikatz)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/Mimikatz_SilverTicket.htm" target="mainframe">Silver Ticket (Mimikatz)</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Information Collection</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/ntdsutil.htm" target="mainframe">ntdsutil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/vssadmin.htm" target="mainframe">vssadmin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/csvde.htm" target="mainframe">csvde</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/ldifde.htm" target="mainframe">ldifde</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/dsquery.htm" target="mainframe">dsquery</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/dcdiag.htm" target="mainframe">dcdiag</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/nltest.htm" target="mainframe">nltest</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/nmap.htm" target="mainframe">nmap</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Adding or Deleting Local User and Group</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/net-user.htm" target="mainframe">net user</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">File Sharing</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/net-use.htm" target="mainframe">net use</a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-link">Deleting Evidence</li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/sdelete.htm" target="mainframe">sdelete</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/timestomp.htm" target="mainframe">timestomp</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/klist-purge.htm" target="mainframe">klist purge</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="details/wevtutil.htm" target="mainframe">wevtutil</a>
+          </li>
+        </ul>
+      </nav>
+
+      <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+        <div>
+          <!--<iframe src="overview.html" name="mainframe" frameborder="0" width="100%" height=2000px></iframe>//-->
+          <iframe id="newsframe" onLoad="change_frame_height(this.id)" frameborder="0" width="100%" height=5000px marginheight="0" marginwidth="0" src="overview.html" name="mainframe"></iframe>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    function change_frame_height(frm) {
+      var contentsHeight;
+      var docFrame = document.getElementById(frm);
+      try {
+        contentsHeight = docFrame.contentWindow.document.body.scrollHeight;
+      } catch (e) {}
+      if (!isNaN(contentsHeight) && !contentsHeight == 0) {
+        docFrame.height = contentsHeight;
+        docFrame.scrolling = "no"
+      } else {
+        docFrame.height = 120;
+        docFrame.scrolling = "auto"
+      }
+    }
+  </script>
+</body>
+
+</html>
